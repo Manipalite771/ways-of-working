@@ -9,6 +9,7 @@ OUT = "/home/tanmay/Ways of Working/wow-portal.html"
 
 DOCUMENTS = [
     {"id":"executive-summary","file":"WoW_Summary.md","title":"Executive Summary","subtitle":"Quick overview of intent, structure &amp; key concepts","color":"#0f766e","category":"overview"},
+    {"id":"process-map","file":"WoW_Process_Map.md","title":"Process Map","subtitle":"The operational playbook &mdash; what to do at every stage, step by step","color":"#16a34a","category":"overview"},
     {"id":"master-framework","file":"WoW_Proposed_Approach.md","title":"Master Framework","subtitle":"Architecture, Stages, Gates &amp; RACI","color":"#4f46e5","category":"core"},
     {"id":"solutioning-requirements","file":"Granular_Solutioning_Requirements.md","title":"Solutioning &amp; Requirements","subtitle":"Discovery, Workshops, POC, Client Management","color":"#7c3aed","category":"process"},
     {"id":"eval-datasets","file":"Granular_Eval_Dataset_Lifecycle.md","title":"Evaluation Datasets","subtitle":"Creation, Scoring, CI/CD Integration","color":"#059669","category":"process"},
@@ -89,7 +90,7 @@ for doc in DOCUMENTS:
 
 # Home cards
 home_parts = ['<h1>Ways of Working</h1>',
-    '<p>A comprehensive operational framework for the GenAI team. 8 interconnected documents covering the full lifecycle from requirements to production.</p>']
+    '<p>A comprehensive operational framework for the GenAI team. 9 interconnected documents covering the full lifecycle from requirements to production. Start with the Process Map for the hands-on playbook.</p>']
 last_cat = ""
 for doc in DOCUMENTS:
     if doc["category"] != last_cat:
