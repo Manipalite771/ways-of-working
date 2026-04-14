@@ -4201,7 +4201,7 @@ Postmortem (within 48 hours for SEV-1/2):
 <tr>
 <td>2</td>
 <td>Walk the Complexity Ladder</td>
-<td><strong>Current system: Level 2 (Router) + Level 3 (Parallel).</strong> Stage 10 processes sections in parallel; different stages route to different providers (Gemini vs Claude). <strong>Target system: Level 5 (Multi-Agent).</strong> Justification: single agent cannot hold context for 12+ stages spanning content generation, visual design, rendering, and iteration. Specialized agents produce better outputs in their domain. Current pipeline already has natural agent boundaries (content vs design vs rendering vs iteration). <strong>Evidence needed:</strong> Run single-agent vs multi-agent on 10 test inputs during first sprint to validate the split.</td>
+<td><strong>Current system: Level 2 (Router) + Level 3 (Parallel).</strong> Stage 10 processes sections in parallel; different stages route to different providers (Gemini vs Claude). <strong>Proposed target: Level 5 (Multi-Agent).</strong> Justification: single agent cannot hold context for 12+ stages spanning content generation, visual design, rendering, and iteration. Specialized agents produce better outputs in their domain. Current pipeline already has natural agent boundaries (content vs design vs rendering vs iteration). <strong>However — open discussion point:</strong> The alternative plan argues for L4 (single agent with good tools), reasoning that multi-agent adds orchestration complexity without proven benefit at this scale. <strong>The WoW process says &quot;default to lowest level that works.&quot;</strong> Resolution: Run single-agent vs multi-agent on 10 test inputs during Sprint 1. Measure context window usage, latency overhead, debuggability. If single agent handles the scope without quality degradation, prefer L4. Decide at end of Sprint 1 with evidence.</td>
 </tr>
 <tr>
 <td>3</td>
@@ -4316,7 +4316,97 @@ Postmortem (within 48 hours for SEV-1/2):
 <tr>
 <td></td>
 <td></td>
-<td><strong>Total: 15 skill files.</strong> Each includes: system prompt, user prompt template, model, output format, version metadata.</td>
+<td><code>skills/sca/source-reference.md</code> — (Sonnet 4.5 / Gemini 2.5 Pro) — Extract and link source references with citations</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>skills/sca/asset-assembly.md</code> — Mix stages 1-2 (Claude) — Assemble sections into final asset structure</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>skills/sca/master-code-iteration.md</code> — (Gemini 2.5 Pro) — Master code iteration p1/p2 for templates that use monolithic code approach (separate from section-level iteration)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>skills/sca/image-generation.md</code> — (Claude/Gemini) — Image-to-code snippets, immediate design generation, image recreation prompts</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>skills/sca/mermaid-correction.md</code> — (Gemini 2.5 Pro) — Correct and validate Mermaid diagram syntax from source PDFs</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>skills/sca/citation-extraction.md</code> — (Claude) — Bounding box section flesh-out + citation extraction with positional data</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Total: 21 skill files</strong> (consolidated from 48 prompts in <code>prompts.py</code> across 6 domains: extraction, outline, design, layout, assembly/iteration, visual/utility). Note: the current <code>prompts.py</code> is 5,291 lines with many provider-specific variants per stage — skills consolidate these variants, with model routing handled via frontmatter.</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Skill frontmatter schema</strong></td>
+<td>Every skill file must include this machine-readable frontmatter:</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>name</code> — skill identifier (e.g., <code>pdf-extraction</code>)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>version</code> — semver (e.g., <code>1.0.0</code>)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>product_area</code> — <code>medcom-asset</code></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>domain</code> — extraction / outline / design / layout / assembly / iteration / visual / utility</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>execution_mode</code> — single / parallel / iterative</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>model_preference</code> — primary model (e.g., <code>gemini-3-pro-preview</code>)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>model_fallback</code> — fallback model (e.g., <code>gemini-2.5-pro</code>)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>max_tokens</code> — output token limit</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>temperature</code> — 0 for deterministic, higher for creative tasks</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>eval_dataset</code> — path to linked eval dataset (e.g., <code>eval-datasets/extraction/pdf-extraction.json</code>)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>tools_required</code> — list of tools this skill needs (e.g., <code>[pdf_parse, s3_storage]</code>)</td>
 </tr>
 <tr>
 <td>5</td>
@@ -4361,17 +4451,57 @@ Postmortem (within 48 hours for SEV-1/2):
 <tr>
 <td></td>
 <td></td>
-<td><code>tools/template-resolver</code> — Resolve template-specific overrides (TEMPLATE_STAGE10_PROMPT_OVERRIDES for az-infographic, az-slide-deck, slide-deck) and asset dimensions</td>
+<td><code>tools/template-resolver</code> — Resolve template-specific overrides (TEMPLATE_STAGE10_PROMPT_OVERRIDES for az-infographic, az-slide-deck, slide-deck), asset dimensions, and <strong>master-code vs section-by-section routing</strong> (some templates in <code>MASTER_CODE_TEMPLATES_LIST</code> are processed as a single monolithic code block, others section-by-section — this fundamentally changes the agent's control flow)</td>
 </tr>
 <tr>
 <td></td>
 <td></td>
-<td><strong>Total: 8 tools.</strong></td>
+<td><code>tools/syntax-checker</code> — Wraps existing Node.js <code>syntax-checker/</code> module. Validates generated HTML/JSX/CSS before rendering. Returns validation result + error list.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>tools/textract-ocr</code> — AWS Textract integration for scanned PDFs and image-based documents where standard PDF extraction produces poor results</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>tools/ssr-render</code> — Wraps <code>simple_ssr_bridge.py</code>. Converts React JSX code to rendered HTML string (120s timeout). Separate from Playwright screenshot — this is the compilation step, not the capture step.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>tools/monitor</code> — Wraps <code>MonitorJobService</code> + <code>MonitorLLMCallService</code> + <code>AuditLogService</code>. Logs every agent decision, tool call, and LLM invocation with run_id, timing, cost. Stores large payloads in S3.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Total: 12 tools.</strong></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Tool interface standard</strong></td>
+<td>Every tool must follow a typed contract:</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Input:</strong> <code>TypedDict</code> with named, typed parameters (e.g., <code>PdfParseInput: {s3_key: str, extract_images: bool, chunk_size: int, dpi_scale: float}</code>)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Output:</strong> <code>TypedDict</code> with structured return (e.g., <code>PdfParseOutput: {pages: list[dict], total_pages: int, extraction_method: str}</code>)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Function:</strong> <code>execute(input: InputType) -&gt; OutputType</code> — stateless, self-contained, no domain logic. Tools are infrastructure primitives; domain logic lives in skills.</td>
 </tr>
 <tr>
 <td>6</td>
 <td>Define KB requirements</td>
-<td><strong>Structural KBs:</strong> <code>kb/sca/asset-types.md</code> (definitions and constraints per asset type — poster, slide deck, infographic, emailer, microsite, custom). <code>kb/sca/template-catalog.md</code> (available templates per type with dimensions, color schemes, layout rules, preview references). <code>kb/sca/xml-outline-schema.md</code> (the XML structure specification and valid nesting rules). <strong>Conventions KBs:</strong> <code>kb/sca/medical-writing-conventions.md</code> (MedComm-specific language — abbreviations, citation format, regulatory language). <code>kb/sca/design-principles.md</code> (visual layout rules — spacing, font hierarchy, color usage per brand). <strong>Corrections KBs:</strong> <code>kb/sca/common-failures.md</code> (known failure patterns from production bugs — content overflow, citation mismatches, Mermaid rendering issues, and how to avoid them).</td>
+<td><strong>Structural KBs:</strong> <code>kb/sca/asset-types.md</code> (definitions and constraints per asset type — poster, slide deck, infographic, emailer, microsite, custom). <code>kb/sca/template-catalog.md</code> (available templates per type with dimensions, color schemes, layout rules, preview references). <code>kb/sca/xml-outline-schema.md</code> (the XML structure specification and valid nesting rules). <code>kb/sca/stage-dependencies.md</code> (stage ordering and data flow — what depends on what, what can be parallelized; extracted from current <code>PROMPT_STAGE_MAPPING</code> dicts). <code>kb/sca/master-vs-section-templates.md</code> (which templates use master-code approach vs section-by-section processing; extracted from <code>MASTER_CODE_TEMPLATES_LIST</code> — this is a first-class routing decision for the agent). <strong>Conventions KBs:</strong> <code>kb/sca/medical-writing-conventions.md</code> (MedComm-specific language — abbreviations, citation format, regulatory language). <code>kb/sca/design-principles.md</code> (visual layout rules — spacing, font hierarchy, color usage per brand). <code>kb/sca/html-css-conventions.md</code> (default section layout guidance, fit guidance, responsive rules; extracted from <code>template_guidance_defaults.py</code>). <code>kb/sca/brand-guidelines/</code> (per-client directory — AZ, Gilead, etc. — brand colors, fonts, logos, client-specific layout rules). <strong>Corrections KBs:</strong> <code>kb/sca/common-failures.md</code> (known failure patterns from production bugs — content overflow, citation mismatches, Mermaid rendering issues, and how to avoid them). <strong>Total: 10 KBs</strong> (5 structural + 3 conventions + 1 brand-guidelines directory + 1 corrections).</td>
 </tr>
 <tr>
 <td>7</td>
@@ -4386,21 +4516,23 @@ Postmortem (within 48 hours for SEV-1/2):
 <tr>
 <td>9</td>
 <td>Risk register</td>
-<td><strong>R1:</strong> Strands may not support all required patterns — Mitigation: evaluate in Sprint 1, fall back to custom orchestration. <strong>R2:</strong> Visual quality eval is subjective — Mitigation: define rubric with measurable criteria (no overflow, correct dimensions, text readability). <strong>R3:</strong> Agentic overhead may increase latency — Mitigation: benchmark early in Sprint 1, optimize agent handoffs. <strong>R4:</strong> 15 skills + 8 tools is a large surface area — Mitigation: build ContentAgent first as pattern validation before expanding. <strong>R5:</strong> Preserving API contracts while swapping orchestration — Mitigation: feature flag to route between old and new pipeline.</td>
+<td><strong>R1:</strong> Strands may not support all required patterns — Mitigation: evaluate in Sprint 1, fall back to custom orchestration. <strong>R2:</strong> Visual quality eval is subjective — Mitigation: define rubric with measurable criteria (no overflow, correct dimensions, text readability). <strong>R3:</strong> Agentic overhead may increase latency — Mitigation: benchmark early in Sprint 1, optimize agent handoffs. <strong>R4:</strong> 21 skills + 12 tools is a large surface area — Mitigation: build P0 skills first as pattern validation before expanding. <strong>R5:</strong> Preserving API contracts while swapping orchestration — Mitigation: feature flag to route between old and new pipeline. <strong>R6:</strong> Visual eval LLM-judge may not correlate with human judgment — Mitigation: calibrate early (Sprint 2), have QC score 5 rows manually, compare to LLM-judge; if agreement &lt; 70%, use human eval only for visual dimensions, LLM-judge for text dimensions. <strong>R7:</strong> Skill consolidation may lose nuance from 48 specialized prompts — Mitigation: keep current prompt variants as reference, A/B test consolidated skill vs original prompts per stage, roll back if quality drops on any dimension. <strong>R8:</strong> Template-specific behavior harder to express in skills than in code — Mitigation: use template-specific KBs (<code>brand-guidelines/</code>, <code>master-vs-section-templates.md</code>) for per-template rules; keep skills general, KBs specific.</td>
 </tr>
 </tbody>
 </table></div>
 <p><strong>Gate 2 Outputs:</strong></p>
 <ul>
-<li>[x] Architecture: Multi-Agent Level 5 — Orchestrator + ContentAgent + DesignAgent + RenderAgent + IterationAgent</li>
-<li>[x] Complexity decision justified: single-agent insufficient for 12+ stages spanning content, design, rendering, iteration</li>
-<li>[x] Skills map: 15 files with owners and effort estimates</li>
-<li>[x] Tools map: 8 tools mapped from current services</li>
-<li>[x] KB requirements: 3 structural + 2 conventions + 1 corrections</li>
+<li>[x] Architecture: L4 Agent vs L5 Multi-Agent decision to be resolved with evidence in Sprint 1</li>
+<li>[x] Complexity decision: L4/L5 evaluation plan documented with test criteria</li>
+<li>[x] Skills map: 21 files (consolidated from 48 prompts) with owners, priority (P0/P1/P2), and effort estimates</li>
+<li>[x] Skill frontmatter schema defined (name, version, domain, model_preference, eval_dataset, tools_required, etc.)</li>
+<li>[x] Tools map: 12 tools with typed interface standard (TypedDict input/output contracts)</li>
+<li>[x] KB requirements: 5 structural + 3 conventions + 1 brand-guidelines dir + 1 corrections = 10 total</li>
+<li>[x] Master-code vs section-by-section template routing documented</li>
 <li>[x] Framework decision documented (Strands or alternative)</li>
 <li>[x] Non-functional requirements defined</li>
-<li>[x] Risk register: 5 identified risks with mitigations</li>
-<li>[x] Timeline: Sprint 1 = ContentAgent, Sprint 2 = DesignAgent + RenderAgent, Sprint 3 = IterationAgent + integration</li>
+<li>[x] Risk register: 8 identified risks with mitigations</li>
+<li>[x] Timeline: Sprint 1-2 = P0 skills + core tools, Sprint 3-4 = P1 skills + remaining tools, Sprint 5-6 = P2 skills + integration</li>
 </ul>
 <hr />
 <h2 id="stage-3-build-amp-test">STAGE 3: BUILD &amp; TEST</h2>
@@ -4421,7 +4553,7 @@ Postmortem (within 48 hours for SEV-1/2):
 <tr>
 <td>2</td>
 <td>Role-based permissions</td>
-<td><strong>SAs</strong> create and edit all 15 skill files, all KBs, eval datasets. <strong>Engineers</strong> implement 8 tools, agent framework integration, Orchestrator, API wiring. <strong>QC</strong> builds eval datasets, runs Tier 3 human reviews. SAs use Cursor/Claude Code for skill editing, engineers handle all <code>.py</code> files.</td>
+<td><strong>SAs</strong> create and edit all 21 skill files, all KBs, eval datasets. <strong>Engineers</strong> implement 12 tools, agent framework integration, Orchestrator, API wiring. <strong>QC</strong> builds eval datasets (115 rows across 7 datasets), runs Tier 3 human reviews. SAs use Cursor/Claude Code for skill editing, engineers handle all <code>.py</code> files.</td>
 </tr>
 <tr>
 <td>3</td>
@@ -4450,13 +4582,13 @@ Postmortem (within 48 hours for SEV-1/2):
 </tr>
 <tr>
 <td>6</td>
-<td>QC + SA: Content eval dataset (15 rows)</td>
-<td><strong>Outline quality (5 rows):</strong> Input: source PDFs + asset type + topic. Expected: well-structured XML matching template schema. Scoring: completeness (all parts present), hierarchy (proper <code>&lt;Part&gt;→&lt;Component&gt;→&lt;Sub-Component&gt;</code> nesting), topic relevance. <strong>Section content (7 rows):</strong> Input: outline + source docs. Expected: accurate, cited content per section. Scoring: data accuracy (PASS/FAIL — zero tolerance), completeness, source fidelity. <strong>Edge cases (3 rows):</strong> Complex tables spanning multiple PDF pages, Mermaid flowcharts in source, 50+ page PDFs with OCR artifacts.</td>
+<td>QC + SA: Content eval datasets (45 rows across 3 datasets)</td>
+<td><strong>Dataset 1 — PDF Extraction (15 rows):</strong> Input: source PDFs (5 simple, 5 with complex tables/figures, 5 edge cases: scanned/multi-column/image-heavy). Scoring: data accuracy (PASS/FAIL — every value matches source), completeness (checklist — all pages/tables/figures extracted), structure preservation (1-5). <strong>Dataset 2 — Content Outline (15 rows):</strong> Input: extracted content + asset type + topic (5 poster, 5 slide-deck, 5 other types). Scoring: completeness (checklist — all topics from source covered), logical structure (1-5 — hierarchy makes sense), appropriate granularity (1-5). <strong>Dataset 3 — Content Flesh-out (15 rows):</strong> Input: outline + source docs (mix of asset types incl. clinical data). Scoring: data accuracy (PASS/FAIL — facts match source, zero tolerance), completeness (checklist — all components populated), clinical interpretation quality (1-5).</td>
 </tr>
 <tr>
 <td>7</td>
 <td>Sprint 1 validation</td>
-<td>Run ContentAgent on all 15 eval rows. Target: content weighted score &gt;= 0.80, zero data accuracy FAILs. Compare output against current Stage 1-3 pipeline output on same inputs — agentic must match or exceed.</td>
+<td>Run ContentAgent on all 45 content eval rows. Target: weighted score &gt;= 0.80, zero data accuracy FAILs. Compare output against current Stage 1-3 pipeline output on same inputs — agentic must match or exceed.</td>
 </tr>
 <tr>
 <td></td>
@@ -4485,8 +4617,8 @@ Postmortem (within 48 hours for SEV-1/2):
 </tr>
 <tr>
 <td>11</td>
-<td>QC + SA: Visual eval dataset (10 rows)</td>
-<td><strong>Layout quality (4 rows):</strong> Input: section content + asset dimensions (e.g., 1920x1080 for slides). Expected: properly fitted HTML/CSS. Scoring: no overflow/truncation, correct viewport, text readable, images loaded and positioned. <strong>Template compliance (3 rows):</strong> Input: content + specific template (slide-deck variant, poster, infographic). Expected: output matches template structure and brand rules. <strong>Screenshot fidelity (3 rows):</strong> Input: rendered HTML. Expected: clean PNG capture via Playwright. Scoring: no rendering artifacts, correct pixel dimensions, all elements visible (fonts, Canvas, SVG rendered).</td>
+<td>QC + SA: Visual eval datasets (40 rows across 2 datasets)</td>
+<td><strong>Dataset 4 — Section Layout (20 rows):</strong> Input: section content + template + asset dimensions (5 per major template type: poster, slide-deck, infographic, emailer). Scoring: visual correctness (PASS/FAIL — no overflow/truncation), content completeness (checklist — all content present in output), brand compliance (checklist — colors, fonts, logos per template), responsive fit (1-5). Screenshots captured for each row — LLM-judge (multimodal) compares expected vs actual on layout fidelity, completeness, visual polish. <strong>Dataset 5 — Section Fit (20 rows):</strong> Input: screenshot of rendered section + PDF target dimensions (same distribution as layout). Scoring: pixel-perfect fit to dimensions (PASS/FAIL), no scrollbars (PASS/FAIL), all images rendered (PASS/FAIL), text readability (1-5).</td>
 </tr>
 <tr>
 <td></td>
@@ -4511,7 +4643,12 @@ Postmortem (within 48 hours for SEV-1/2):
 <tr>
 <td>14</td>
 <td>SA: Convert iteration skills + KBs</td>
-<td>Skills: <code>code-iteration-s1.md</code>, <code>code-iteration-s2.md</code> — from Claude-based prompts. KB: <code>kb/sca/common-failures.md</code> — compiled from production bug patterns (content overflow at page boundaries, citation index mismatches, Mermaid syntax breaking in specific diagram types, Adobe credential timeout patterns).</td>
+<td>Skills: <code>code-iteration-s1.md</code>, <code>code-iteration-s2.md</code>, <code>master-code-iteration.md</code>, <code>source-reference.md</code>, <code>asset-assembly.md</code>, <code>image-generation.md</code>, <code>mermaid-correction.md</code>, <code>citation-extraction.md</code> — remaining P1/P2 skills from prompt consolidation. KB: <code>kb/sca/common-failures.md</code> — compiled from production bug patterns (content overflow at page boundaries, citation index mismatches, Mermaid syntax breaking in specific diagram types, Adobe credential timeout patterns).</td>
+</tr>
+<tr>
+<td>15</td>
+<td>QC + SA: Final eval datasets (30 rows across 2 datasets)</td>
+<td><strong>Dataset 6 — Final Asset Visual (20 rows):</strong> Input: best production assets (5 per major type incl. edge cases: many sections, complex figures). Scoring: overall visual quality (1-5), section assembly correctness (PASS/FAIL), PDF render accuracy (PASS/FAIL), brand compliance (checklist). SME-scored against production baselines. LLM-judge (multimodal) compares expected screenshot vs actual. <strong>Dataset 7 — End-to-End Pipeline (10 rows):</strong> Input: full pipeline source docs → final PDF (2 per major asset type). Scoring: all dimensions from all upstream datasets applied to final output. This is the integration test — validates the complete agent pipeline produces production-quality results. <strong>Total across all 7 datasets: 115 eval rows.</strong></td>
 </tr>
 <tr>
 <td></td>
@@ -4524,47 +4661,49 @@ Postmortem (within 48 hours for SEV-1/2):
 <td></td>
 </tr>
 <tr>
-<td>15</td>
-<td>Tier 1: Automated checks (every commit)</td>
-<td>Pre-commit hooks: Python syntax (Ruff), secrets detection, skill file schema validation (frontmatter must include: name, version, product_area, model, execution_mode), KB format validation (valid markdown with required sections). Custom checks: hallucinated drug name detection (only names from source PDFs allowed in output), XML schema validation (outline must be valid <code>&lt;Asset&gt;</code> structure with proper nesting).</td>
-</tr>
-<tr>
 <td>16</td>
-<td>Tier 2: LLM-as-Judge evals (every PR)</td>
-<td><strong>Content eval (5-row quick):</strong> Judge model: Claude Opus (never the same model that generated the output). Dimensions: data accuracy (PASS/FAIL), content completeness, source fidelity. Pass criteria: weighted &gt;= 0.80, zero data accuracy FAILs. <strong>Visual eval (5-row quick):</strong> Judge: Gemini 2.5 Pro with image input (screenshot of rendered asset). Dimensions: layout quality, template compliance, visual readability. Note: visual eval requires multi-modal judge — screenshot is the input, not just code.</td>
+<td>Tier 1: Automated checks (every commit)</td>
+<td>Pre-commit hooks: Python syntax (Ruff), secrets detection, skill file schema validation (frontmatter must include all fields from schema: name, version, domain, model_preference, eval_dataset, tools_required, etc.), tool interface validation (typed input/output), KB format validation (valid markdown with required sections). Custom checks: hallucinated drug name detection (only names from source PDFs allowed in output), XML schema validation (outline must be valid <code>&lt;Asset&gt;</code> structure with proper nesting).</td>
 </tr>
 <tr>
 <td>17</td>
+<td>Tier 2: LLM-as-Judge evals (every PR)</td>
+<td><strong>Content eval (5-row quick from each content dataset):</strong> Judge model: Claude Opus (never the same model that generated the output). Dimensions per stage — extraction: accuracy + completeness + structure; outline: completeness + structure + granularity; flesh-out: accuracy + completeness + interpretation. Pass criteria: weighted &gt;= 0.80, zero data accuracy FAILs. <strong>Visual eval (5-row quick from layout + fit datasets):</strong> Judge: Gemini 2.5 Pro with image input (screenshot of rendered asset). Dimensions: layout fidelity, content completeness, visual polish, brand adherence, responsive correctness. Note: visual eval requires multi-modal judge — screenshot is the input, not just code. <strong>Visual eval calibration:</strong> QC manually scores 5 rows; compare to LLM-judge. If agreement &lt; 70%, fall back to human-only for visual dimensions.</td>
+</tr>
+<tr>
+<td>18</td>
 <td>Tier 3: Human review (weekly)</td>
 <td>QC reviews 10 assets per week: 3 slide decks, 3 infographics, 2 posters, 2 emailers. Review blind (without seeing LLM-Judge scores first). Compare agentic output vs. current pipeline output on same inputs. Track: where agentic is better, where it's worse, novel failure modes not caught by automated evals. New failure patterns → new eval rows.</td>
 </tr>
 <tr>
-<td>18</td>
-<td>A/B comparison</td>
-<td>Run same 15-20 inputs through both current Celery pipeline and new agentic pipeline. Compare on all dimensions: quality scores, end-to-end latency, per-asset cost (broken down by agent), pipeline failure rate. <strong>This is the key gate</strong> — agentic system must be at parity or better on all dimensions before proceeding.</td>
-</tr>
-<tr>
 <td>19</td>
-<td>Auto-refinement</td>
-<td>Run AI-assisted improvement on content skills (<code>outline-generation.md</code>, <code>section-fleshing.md</code>) using eval feedback. Guardrails: max 5 modifications per session, $50 cost cap, all changes human-reviewed before merge. Hold-out set (3 content rows + 2 visual rows) never exposed to auto-refinement — used only for final validation.</td>
+<td>A/B comparison</td>
+<td>Run same 20 inputs through both current Celery pipeline and new agentic pipeline. Compare on all dimensions: quality scores, end-to-end latency, per-asset cost (broken down by agent/stage), pipeline failure rate. <strong>This is the key gate</strong> — agentic system must be at parity or better on all dimensions before proceeding.</td>
 </tr>
 <tr>
 <td>20</td>
+<td>Auto-refinement</td>
+<td>Run AI-assisted improvement on content skills (<code>outline-generation.md</code>, <code>section-fleshing.md</code>) using eval feedback. Guardrails: max 5 modifications per session, $50 cost cap, all changes human-reviewed before merge. Hold-out set (20% of rows across all 7 datasets, never seen during development) used only for final validation.</td>
+</tr>
+<tr>
+<td>21</td>
 <td>PR review and merge</td>
-<td><strong>Sprint 1 PR:</strong> ContentAgent + 4 skills + content eval dataset (15 rows). <strong>Sprint 2 PR:</strong> DesignAgent + RenderAgent + 8 skills + 8 tools + visual eval dataset (10 rows). <strong>Sprint 3 PR:</strong> IterationAgent + Orchestrator + 2 skills + KBs + A/B comparison results. Each PR includes before/after eval scores. Required reviewers: 1 peer SA (skill accuracy) + 1 engineer (code quality).</td>
+<td><strong>Sprint 1-2 PRs:</strong> P0 skills (7 extraction/outline/layout) + core tools (6) + content eval datasets (45 rows). <strong>Sprint 3-4 PRs:</strong> P1 skills (6 design/assembly/iteration) + remaining tools (6) + visual eval datasets (40 rows). <strong>Sprint 5-6 PRs:</strong> P2 skills (3 visual/utility) + end-to-end eval (30 rows) + full integration + A/B comparison results. Each PR includes before/after eval scores. Required reviewers: 1 peer SA (skill accuracy) + 1 engineer (code quality).</td>
 </tr>
 </tbody>
 </table></div>
 <p><strong>Gate 3 Outputs:</strong></p>
 <ul>
-<li>[x] All 15 skills converted, versioned, and passing eval</li>
-<li>[x] All 8 tools implemented and tested</li>
-<li>[x] Content eval: &gt;= 85% weighted score, zero data accuracy FAILs</li>
-<li>[x] Visual eval: layout quality &gt;= 4/5, zero overflow/truncation on standard templates</li>
-<li>[x] A/B comparison: agentic &gt;= current pipeline on quality, latency, cost, and failure rate</li>
-<li>[x] Hold-out set passes (5 rows never seen during development/auto-refinement)</li>
-<li>[x] All code reviewed by engineering</li>
-<li>[x] Known limitations documented (e.g., Mermaid rendering edge cases, very large PDFs, custom asset types)</li>
+<li>[x] All 21 skills converted, versioned (with full frontmatter schema), and passing eval</li>
+<li>[x] All 12 tools implemented with typed interfaces and tested</li>
+<li>[x] 7 eval datasets built with 115 total rows (PDF extraction 15, outline 15, flesh-out 15, layout 20, fit 20, visual 20, end-to-end 10)</li>
+<li>[x] Per-stage scoring rubrics defined and calibrated (LLM-judge vs human agreement &gt; 70% on all dimensions)</li>
+<li>[x] Content eval: &gt;= 85% weighted score, zero data accuracy FAILs across extraction/outline/flesh-out datasets</li>
+<li>[x] Visual eval: layout quality &gt;= 4/5, zero overflow/truncation on standard templates, brand compliance passing</li>
+<li>[x] A/B comparison on 20 identical inputs: agentic &gt;= current pipeline on quality, latency, cost, and failure rate</li>
+<li>[x] Hold-out set passes (20% of rows across all datasets, never seen during development/auto-refinement)</li>
+<li>[x] All code reviewed by engineering per CODEOWNERS</li>
+<li>[x] Known limitations documented (e.g., Mermaid rendering edge cases, very large PDFs, master-code template nuances, custom asset types)</li>
 </ul>
 <hr />
 <h2 id="stage-4-deploy-amp-validate">STAGE 4: DEPLOY &amp; VALIDATE</h2>
@@ -4654,7 +4793,7 @@ Postmortem (within 48 hours for SEV-1/2):
 <tr>
 <td>1</td>
 <td>Assemble handoff package</td>
-<td><strong>Architecture doc:</strong> Multi-agent topology diagram (Orchestrator → ContentAgent → DesignAgent → RenderAgent → IterationAgent), data flow (S3 → agents → tools → PDF), tool dependency map (which tools each agent uses). <strong>Skill files:</strong> All 15 skills in <code>/skills/sca/</code>, each versioned with model and prompt metadata. <strong>KBs:</strong> 6 knowledge bases covering asset types, templates, XML schema, writing conventions, design principles, common failures. <strong>Eval suite:</strong> 25-30 rows (content + visual) + hold-out set + LLM-as-Judge prompts + automated checks. <strong>Known limitations:</strong> Mermaid rendering edge cases, very large PDFs (100+ pages), custom asset type handling, Adobe credential timeout under high concurrency. <strong>Decision log:</strong> Why multi-agent over single-agent, why specific model assignments per skill, framework decision rationale.</td>
+<td><strong>Architecture doc:</strong> Agent topology diagram (Orchestrator → specialized agents or single agent with tools — per Sprint 1 decision), data flow (S3 → agent → tools → PDF), tool dependency map (which tools each skill uses). <strong>Skill files:</strong> All 21 skills in <code>/skills/sca/</code> with full frontmatter schema, each versioned with model, domain, and eval dataset metadata. <strong>KBs:</strong> 10 knowledge bases covering asset types, templates, XML schema, stage dependencies, master-vs-section routing, writing conventions, design principles, HTML/CSS conventions, brand guidelines, common failures. <strong>Eval suite:</strong> 115 rows across 7 datasets + hold-out set + LLM-as-Judge prompts + automated checks + eval runner CLI. <strong>Known limitations:</strong> Mermaid rendering edge cases, very large PDFs (100+ pages), master-code template nuances, custom asset type handling, Adobe credential timeout under high concurrency, visual eval LLM-judge calibration limits. <strong>Decision log:</strong> L4 vs L5 architecture decision with evidence, why specific model assignments per skill, framework decision rationale, skill consolidation tradeoffs (48 prompts → 21 skills).</td>
 </tr>
 <tr>
 <td>2</td>
@@ -4688,8 +4827,28 @@ Postmortem (within 48 hours for SEV-1/2):
 </tr>
 <tr>
 <td>8</td>
-<td>Scale to new asset types</td>
-<td>Once pilot succeeds, test scalability: add a new asset type (e.g., microsite) following <strong>Type B process</strong> (Stages 0 → 2 → 3 → 4 → 5, skip Stage 1 since requirements framework exists). Should require: new skill variants (<code>microsite-layout.md</code>), template addition to catalog KB, 10-row eval dataset for new type. <strong>If this takes hours not days, the architecture is working.</strong></td>
+<td>Scale to new asset types — the zero-code-change test</td>
+<td>Once pilot succeeds, validate scalability by adding a new asset type (e.g., microsite). This follows <strong>Type B process</strong> (Stages 0 → 2 → 3 → 4 → 5). <strong>Concrete walkthrough:</strong></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Day 1 (SA):</strong> (1) Create template JSON in <code>kb/sca/template-catalog.md</code>: dimensions, structure, section layout guidance — the <code>template-resolver</code> tool can read it immediately. (2) If asset type needs special outline logic → update <code>skills/sca/outline-generation-vertical.md</code> with new routing rule. (3) If asset type needs special layout rules → create <code>kb/sca/brand-guidelines/{client}.md</code> with type-specific conventions. (4) If master-code approach needed → add to <code>kb/sca/master-vs-section-templates.md</code>.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Day 2 (SA + QC):</strong> (5) Create eval dataset: 10 rows (5 normal, 3 medium, 2 edge cases) in <code>eval-datasets/layout/microsite.json</code>. (6) Run agent on all 10 rows: <code>python run_eval.py --dataset layout/microsite --mode full</code>. (7) Score outputs, iterate on skill/KB if quality below threshold. (8) Submit PR with: template config + skill updates + eval dataset + eval results.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Day 2 (Engineer):</strong> (9) Review PR, verify eval results are plausible. (10) Merge and deploy.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Total: &lt; 2 days, zero code changes to tools or agent.</strong> If this takes longer, the architecture has a problem.</td>
 </tr>
 <tr>
 <td>9</td>
@@ -4700,14 +4859,14 @@ Postmortem (within 48 hours for SEV-1/2):
 </table></div>
 <p><strong>Gate 5 Outputs:</strong></p>
 <ul>
-<li>[x] Handoff package complete (architecture, 15 skills, 6 KBs, eval suite, runbook, decision log)</li>
+<li>[x] Handoff package complete (architecture, 21 skills, 12 tools, 10 KBs, 115-row eval suite, runbook, decision log)</li>
 <li>[x] Delivery team trained (3 sessions recorded)</li>
-<li>[x] Delivery team can run eval suite and interpret results independently</li>
+<li>[x] Delivery team can run eval suite (<code>python run_eval.py --mode full</code>) and interpret results independently</li>
 <li>[x] Escalation tiers defined and agreed (L1-L4)</li>
 <li>[x] Feedback loop active with QC classification</li>
 <li>[x] Monitoring ownership transferred</li>
 <li>[x] Support warranty: 4 weeks, tracking L3 escalation trend</li>
-<li>[x] Scalability tested: new asset type added via Type B process</li>
+<li>[x] Scalability validated: new asset type (e.g., microsite) added in &lt; 2 days via Type B process with zero code changes</li>
 <li>[x] WoW process retro completed with documented learnings</li>
 </ul>
 <hr />
@@ -4808,17 +4967,17 @@ Postmortem (within 48 hours for SEV-1/2):
 </tr>
 <tr>
 <td>Week 4-5</td>
-<td>Sprint 1 — ContentAgent + 4 skills + content eval passing</td>
+<td>Sprint 1-2 — P0 skills (7) + core tools (6) + content eval datasets (45 rows) + L4/L5 decision</td>
 <td>—</td>
 </tr>
 <tr>
 <td>Week 6-7</td>
-<td>Sprint 2 — DesignAgent + RenderAgent + 8 skills + 8 tools + visual eval passing</td>
+<td>Sprint 3-4 — P1 skills (6) + remaining tools (6) + visual eval datasets (40 rows)</td>
 <td>—</td>
 </tr>
 <tr>
 <td>Week 8-9</td>
-<td>Sprint 3 — IterationAgent + Orchestrator + A/B comparison passing</td>
+<td>Sprint 5-6 — P2 skills (3) + end-to-end eval (30 rows) + full integration + A/B comparison</td>
 <td>Gate 3</td>
 </tr>
 <tr>
@@ -4880,8 +5039,18 @@ Postmortem (within 48 hours for SEV-1/2):
 </tr>
 <tr>
 <td>Time to add new asset type</td>
-<td>Hours, not days</td>
-<td>Post-pilot scalability test</td>
+<td>&lt; 2 days, zero code changes</td>
+<td>Post-pilot scalability test (Day 1/Day 2 walkthrough)</td>
+</tr>
+<tr>
+<td>Eval coverage</td>
+<td>115 rows across 7 datasets</td>
+<td>All datasets built with per-stage rubrics calibrated</td>
+</tr>
+<tr>
+<td>Process compliance</td>
+<td>All gates passed, all PRs have eval results</td>
+<td>Gate checklists + PR audit</td>
 </tr>
 <tr>
 <td>Process followed</td>
