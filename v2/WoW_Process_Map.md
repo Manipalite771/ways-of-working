@@ -222,24 +222,43 @@ Walk through requirements and rubric. Frame it: "You're signing off on how we me
 **Applies to:** Type A (full workshop), Type B (compressed), Type E/F (lightweight).
 **Time:** 3 hours (Type A), 1.5 hours (Type B), 1 hour (Type E/F).
 
+### POC Before Workshop — Mandatory
+
+**Before any solutioning workshop, a lightweight POC should have been completed.** This is not a production-ready prototype — it is a focused test to answer one or two key technical unknowns.
+
+| POC Element | What It Should Cover |
+|-------------|---------------------|
+| **Scope** | The single riskiest assumption. E.g., "Can this model handle the extraction quality we need?" or "Can the framework support parallel tool calls?" |
+| **Time** | 2-5 days maximum. If it takes longer, scope was too broad. |
+| **Output** | Concrete results: eval scores on 5-10 test inputs, latency measurements, cost per run. Not just "it works." |
+| **Who** | SA + Engineer pair. SME consulted if domain accuracy is the question. |
+| **Shared before workshop** | POC results included in pre-workshop packet. Workshop attendees review before arriving. |
+
+**Why:** Without POC results, workshops devolve into opinion debates. POC evidence forces decisions to be data-driven. The Complexity Ladder walk-through is meaningless without test results to cite.
+
 ### Pre-Workshop (1-2 days before)
 
 **Facilitator sends pre-workshop packet containing:**
 - [ ] Requirements summary (1-pager from Stage 1)
 - [ ] Agentic requirement signals from discovery
-- [ ] 2-3 possible approaches
+- [ ] POC results — what was tested, what was the outcome, what questions remain
+- [ ] 2-3 possible approaches with pros/cons/evidence (not just one recommendation)
 - [ ] Existing reusable components from skills catalog
 - [ ] Competitive context
 - [ ] Constraints (timeline, budget, infra, people, regulatory)
 - [ ] Questions to resolve
+- [ ] SME availability — confirm which domain SMEs will attend or be on-call
 
 ### Workshop Agenda (Type A — 3 hours)
 
+**Required attendees:** Facilitator (SA Lead), all contributing SAs, Engineering Lead, SME/domain expert (at minimum on-call, ideally present for architecture discussion).
+
 | Time | What | Led By |
 |------|------|--------|
-| 0:00-0:15 | Context setting. Does everyone understand requirements? State decisions to be made. | Facilitator |
-| 0:15-0:45 | **Complexity Ladder walk-through.** Can this be a simple chain? Need routing? Parallelization? Genuinely open-ended → agent? Each step must cite evidence. | All |
-| 0:45-1:30 | **Architecture design.** Agent topology, skill map, data flow. Which skills exist? Which need creation? KB requirements. Estimate LLM calls and cost per run. Engineer validates feasibility. | All |
+| 0:00-0:15 | Context setting. Does everyone understand requirements? Summarize POC results. State decisions to be made. | Facilitator |
+| 0:15-0:45 | **Complexity Ladder walk-through.** Can this be a simple chain? Need routing? Parallelization? Genuinely open-ended → agent? Each step must cite evidence from POC results. | All |
+| 0:45-1:00 | **Discuss alternative approaches.** Walk through the 2-3 approaches from the pre-workshop packet. Each approach gets 5 min to present, then group discussion. SME validates domain feasibility. Do NOT converge on one approach until all have been heard. | All |
+| 1:00-1:30 | **Architecture design.** Based on chosen approach: agent topology, skill map, data flow. Which skills exist? Which need creation? KB requirements. Estimate LLM calls and cost per run. Engineer validates feasibility. SME validates domain coverage. | All |
 | 1:30-1:45 | BREAK | |
 | 1:45-2:15 | **Non-functional requirements.** Latency budget, concurrency, cost ceiling, security, deployment, pharma-specific (audit trail, data classification, retention). | Engineer-led |
 | 2:15-2:45 | **Decision & action items.** State decision with rationale. Assign skill owners. Timeline with milestones. | Facilitator |
@@ -331,20 +350,26 @@ Walk through requirements and rubric. Frame it: "You're signing off on how we me
 | `git commit -m "short description"` | Saves snapshot | After staging |
 | `git push origin skill/my-change` | Uploads branch | When ready for review |
 
-**Who can do what:**
+#### Who Does What — Build Phase Permission Matrix
 
-| Action | Solution Architect | QC/Testing | Engineer |
-|--------|-------------------|-----------|----------|
-| Create feature branch | Yes | Yes | Yes |
-| Edit skill files (.md) | Yes | Yes | Yes |
-| Edit knowledge bases | Yes | Yes | Yes |
-| Edit eval datasets | Yes | Yes | Yes |
-| Edit pipeline code | No | No | Yes |
-| Edit infrastructure/deployment configs | No | No | Yes |
-| Approve PRs (skill/KB changes) | Yes (peer) | No | Yes (required) |
-| Approve PRs (code changes) | No | No | Yes (required) |
-| Merge to main | No | No | Yes |
-| Deploy to production | No | No | Yes + Leadership approval |
+| Action | Solution Architect | QC/Testing | Engineer | SME |
+|--------|-------------------|-----------|----------|-----|
+| Create feature branch | Yes | Yes | Yes | No (works through SA) |
+| Write/edit skill files (.md) | **Primary author** | Review + suggest | Review + approve | Validate domain accuracy |
+| Write/edit knowledge bases | **Primary author** | Review | Approve | Validate domain accuracy |
+| Create/edit eval dataset rows | Provide domain input | **Primary author** | Review | Score calibration |
+| Score eval outputs (human review) | Calibrate with QC | **Primary scorer** | — | Gold-standard scoring |
+| Edit pipeline code (.py) | No | No | **Primary author** | No |
+| Edit infrastructure/deployment configs | No | No | **Primary author** | No |
+| Build tools | No | No | **Primary author** | No |
+| Build agent/orchestrator | No | No | **Primary author** | No |
+| Run evals on own PR | Yes (required) | Yes (required) | Yes (required) | — |
+| Approve PRs (skill/KB changes) | Yes (peer review) | No | Yes (required) | Optional |
+| Approve PRs (code changes) | No | No | Yes (required, different from author) | No |
+| Merge to main | No | No | Yes | No |
+| Deploy to production | No | No | Yes + Leadership approval | No |
+
+**Key principle:** SAs own domain content (skills, KBs). QC owns quality measurement (eval datasets, scoring). Engineers own code (tools, agent, infra). SMEs validate domain accuracy when consulted. Everyone runs evals on their own work before submitting PRs.
 
 **Common Git Mistakes and Fixes:**
 
@@ -392,13 +417,50 @@ This is the primary workflow for Solution Architects and QC team to make skill/K
 - Don't resolve merge conflicts on code files
 - Don't use `git push --force` ever
 
-### Conflict Resolution
+### Conflict Resolution — How to Handle Overlapping Work
+
+#### Preventing Conflicts Before They Happen
+
+| Mechanism | How It Works | When to Set Up |
+|-----------|-------------|----------------|
+| **Task ownership visibility** | Before starting work, post in team channel: "I'm working on `skills/sca/section-layout.md` on branch `skill/layout-improve`". Others see this and coordinate. | Day 1 |
+| **CODEOWNERS file** | Defines who must review each directory. If two people need to modify the same area, CODEOWNERS ensures at least one reviewer sees both changes. | Week 1 |
+| **Small, focused branches** | Each branch changes 1-3 files for one purpose. The smaller the change, the less likely it conflicts. Target: branches live < 2 days before PR. | Always |
+| **Pull before push** | Always `git pull origin main` before starting AND before pushing. Catches divergence early. | Always |
+
+#### When Two People Deliberately Work on the Same Files
+
+This happens — e.g., two SAs both need to update the same skill file for different improvements.
+
+| Step | Action |
+|------|--------|
+| 1 | **Communicate first.** Agree who goes first. Person A's PR merges first, Person B rebases after. |
+| 2 | **Person A** creates branch, makes changes, runs eval, submits PR. |
+| 3 | **Person A's PR merges** (after review + eval pass). |
+| 4 | **Person B** rebases their branch on latest main: `git pull origin main && git rebase main` |
+| 5 | If rebase has conflicts → **see conflict resolution below**. |
+| 6 | **Person B** re-runs eval (critical — the combined effect of both changes must pass). |
+| 7 | **Person B** submits PR. Reviewer checks: does the combined result still meet quality gates? |
+
+**If this coordination overhead is too high:** Have both people work on the same branch together (pair/mob style). One branch, one PR, shared ownership.
+
+#### Resolving Merge Conflicts
+
+| Who | What They Do |
+|-----|-------------|
+| **Non-engineers (SAs, QC)** | **Do NOT attempt to resolve merge conflicts yourself.** Post in the team channel: "I have a conflict on `skill/my-branch`." An engineer will resolve it. This is a hard rule — resolving conflicts incorrectly can lose work. |
+| **Engineers** | Resolve conflicts on code files. For skill/KB conflicts (`.md` files), consult the relevant SA to decide which version of the content is correct. Use `git mergetool` or manual resolution. |
+| **Using AI for conflict resolution** | AI tools (Cursor, Claude Code) can help engineers understand conflicts in code files — show both versions, explain what changed. However, **AI should never auto-resolve and commit without human review.** For skill files, the SA must verify the domain content is correct after resolution. |
+
+#### Conflict Resolution by Scenario
 
 | Scenario | Resolution |
 |----------|-----------|
 | Same skill, different changes | Second PR to merge must rebase on latest main, re-run evals, verify combined effect |
+| Same code file, different changes | Engineer resolves conflict. Both original authors verify their intent is preserved. Re-run all tests. |
 | Competing approaches to same problem | Escalate to solutioning workshop — don't resolve in PR comments |
 | Engineer + non-engineer disagree on implementation | Engineer has final say on code; SA has final say on domain content |
+| Two PRs both touch eval datasets | Merge sequentially. Second PR must verify no duplicate or conflicting rows. |
 
 ### Guardrails to Prevent Non-Engineers from Breaking Things
 
@@ -423,6 +485,31 @@ Implement in this order:
 ```
 
 > Note: CODEOWNERS enforcement (auto-required reviews) requires GitHub Team plan or higher. On GitHub Free, it serves as documentation; engineers must manually verify.
+
+### Eval Proof Before Pushing — Non-Negotiable
+
+**No PR may be submitted without eval results.** This is the single most important quality gate in the build phase.
+
+**Before pushing your branch, you must:**
+
+| Step | What | Command | Who |
+|------|------|---------|-----|
+| 1 | Run quick eval locally | `python run_eval.py --dataset {relevant-dataset} --mode quick` | PR author |
+| 2 | Verify zero data accuracy FAILs | Check eval output — any FAIL on data accuracy is a blocker | PR author |
+| 3 | Verify weighted score >= 0.80 | Check eval output — below threshold means the change regresses quality | PR author |
+| 4 | Check for regressions | Compare scores on previously-passing rows — no row should drop more than 0.1 | PR author |
+| 5 | Paste eval output into PR description | Copy-paste the full eval output, not just "it passed" | PR author |
+| 6 | Reviewer verifies eval is real | Read the pasted output. Are the numbers plausible? Does the dataset match the change? | Reviewer |
+
+**What counts as eval proof:**
+- The actual eval runner output showing per-row scores and per-dimension breakdown
+- NOT a checkbox saying "I ran evals"
+- NOT a screenshot (too easy to fake)
+- If eval runner is not yet available (early sprints): manual test results on 3+ inputs with specific observations
+
+**If you skip eval:**
+- Reviewer must reject the PR. No exceptions.
+- If it's merged without eval and causes a regression: post-mortem + add the missing eval as a new row.
 
 ### PR Template — Every PR Must Include This
 

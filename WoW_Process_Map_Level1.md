@@ -49,7 +49,7 @@
 | # | What to do | Detail |
 |---|-----------|--------|
 | 1 | Intake call (30 min) | Understand problem at high level with BD/client lead; confirm engagement type |
-| 2 | Discovery session (1–2 hrs) | Collect: manual process walkthrough, input sources, output specs, 3–5 good examples, bad examples, SOPs, style guides |
+| 2 | Discovery session (1–2 hrs) | Collect with SME/domain expert present: manual process walkthrough, input sources, output specs, 3–5 good examples, bad examples, SOPs, style guides |
 | 3 | Define scalability parameters | Max processing time, concurrent users, onboarding time (doc/template/client), error rate tolerance, cost per output, rework rate |
 | 4 | Plan golden dataset (2–4 hrs) | Identify input-output pairs from examples; define 3–5 scoring dimensions (accuracy, completeness, interpretation, compliance, style); draft rubric; estimate row count |
 | 5 | Draft requirements document | Problem statement, in-scope/out-of-scope, success criteria (quantified), input/output spec, quality thresholds, scalability params, deployment needs, regulatory requirements |
@@ -76,13 +76,15 @@
 
 | # | What to do | Detail |
 |---|-----------|--------|
-| 1 | Send pre-workshop packet (1–2 days before) | Requirements summary, 2–3 possible approaches, reusable components from skills catalog, constraints, questions to resolve |
-| 2 | Context setting (15 min) | Confirm everyone understands requirements; state the decisions to be made |
-| 3 | Walk the Complexity Ladder | Decide architecture level: L1 Simple Chain → L2 Router → L3 Parallel → L4 Agent → L5 Multi-Agent. Default to lowest that works. Every step up must cite evidence. |
-| 4 | Design architecture | Agent topology, skill map, data flow. Which skills exist vs. need creation. KB requirements. Estimate LLM calls and cost per run. Engineer validates feasibility. |
-| 5 | Define non-functional requirements | Latency budget, concurrency, cost ceiling, security, deployment environment, pharma-specific (audit trail, data classification, retention) |
-| 6 | Decide and assign (30 min) | State decision with rationale. Assign skill owners. Set timeline with milestones. Capture all action items with owners + deadlines. |
-| 7 | Document workshop outputs | Architecture diagram, complexity decision record, skills map with owners + effort, KB requirements, eval dataset plan, risk register update |
+| 1 | <a href="javascript:void(0)" onclick="goDetail('poc-before-workshop-mandatory')">POC completed before workshop</a> | A lightweight POC (2–5 days) must be done before the workshop. Tests the riskiest assumption. Concrete results (eval scores, latency, cost) shared in pre-workshop packet. Without POC data, workshops are opinion debates. |
+| 2 | Send pre-workshop packet (1–2 days before) | Requirements summary, POC results, <a href="javascript:void(0)" onclick="goDetail('pre-workshop-1-2-days-before')">2–3 possible approaches with pros/cons</a> (not just one recommendation), reusable components, constraints, SME availability confirmed |
+| 3 | Context setting (15 min) | Confirm everyone understands requirements; summarize POC results; state decisions to be made. **SMEs must attend or be on-call** for domain feasibility validation. |
+| 4 | <a href="javascript:void(0)" onclick="goDetail('the-complexity-ladder-use-this-to-decide-architecture')">Walk the Complexity Ladder</a> | Decide architecture level: L1 Simple Chain → L2 Router → L3 Parallel → L4 Agent → L5 Multi-Agent. Default to lowest that works. Every step up must cite evidence from POC. |
+| 5 | Discuss alternative approaches | Walk through 2–3 approaches from pre-workshop packet. Each gets 5 min to present, then group discussion. <a href="javascript:void(0)" onclick="goDetail('workshop-agenda-type-a-3-hours')">Do NOT converge on one approach until all have been heard.</a> SME validates domain feasibility for each. |
+| 6 | Design architecture | Agent topology, skill map, data flow. Which skills exist vs. need creation. KB requirements. Estimate LLM calls and cost per run. Engineer validates feasibility. SME validates domain coverage. |
+| 7 | Define non-functional requirements | Latency budget, concurrency, cost ceiling, security, deployment environment, pharma-specific (audit trail, data classification, retention) |
+| 8 | Decide and assign (30 min) | State decision with rationale. Assign skill owners. Set timeline with milestones. Capture all action items with owners + deadlines. |
+| 9 | Document workshop outputs | Architecture diagram, complexity decision record, skills map with owners + effort, KB requirements, eval dataset plan, risk register update |
 
 **Gate 2 Checklist:**
 - [ ] Architecture documented (diagram + decision record) and peer-reviewed
@@ -107,16 +109,17 @@
 |---|-----------|--------|
 | 1 | Codebase access provided to all | Repo access granted; branch protection enabled on `main` (no direct pushes, require PR reviews) |
 | 2 | Branch + contribution model decided | Trunk-based dev with short-lived branches; naming: `{type}/{area}-{description}` (e.g., `skill/csr-s11-add-rule`) |
-| 3 | Role-based permissions set | SAs/QC edit skills, KBs, eval datasets. Engineers edit code, infra, configs. Engineers approve + merge all PRs. (See permission matrix) |
-| 4 | CODEOWNERS + PR template configured | CODEOWNERS defines review ownership per directory; PR template requires: what changed, eval before/after, testing checklist |
-| 5 | Non-engineers onboarded on Git | 30-min guided walkthrough on sandbox repo — mandatory before first PR contribution |
-| 6 | Skills and KBs developed | SAs use Cursor/Claude Code for skill/KB edits; engineers handle pipeline code. All changes on feature branches. |
-| 7 | Eval datasets built | Golden dataset rows with input-output pairs, 3–5 scoring dimensions, edge cases included (25–30% of rows) |
+| 3 | <a href="javascript:void(0)" onclick="goDetail('who-does-what-build-phase-permission-matrix')">Role-based permissions set</a> | SAs own skills + KBs (primary author). QC owns eval datasets + scoring. Engineers own code + tools + infra. SMEs validate domain accuracy. Everyone runs evals on own work. Engineers approve + merge all PRs. |
+| 4 | CODEOWNERS + PR template configured | CODEOWNERS defines review ownership per directory; <a href="javascript:void(0)" onclick="goDetail('pr-template-every-pr-must-include-this')">PR template</a> requires: what changed, eval before/after, testing checklist |
+| 5 | Non-engineers onboarded on Git | 30-min guided walkthrough on sandbox repo — mandatory before first PR contribution. <a href="javascript:void(0)" onclick="goDetail('how-non-engineers-contribute-using-cursorclaude-code')">See: How non-engineers contribute using Cursor/Claude Code</a> |
+| 6 | Skills and KBs developed | SAs use Cursor/Claude Code for skill/KB edits; engineers handle pipeline code. All changes on feature branches. SMEs consulted for domain validation on content skills. |
+| 7 | Eval datasets built | Golden dataset rows with input-output pairs, 3–5 scoring dimensions, edge cases included (25–30% of rows). SMEs provide gold-standard scoring for calibration. |
 | 8 | Tier 1: Automated code checks (every commit) | Syntax, secrets scan, skill/KB schema validation, hallucination detection, cross-reference checks. Costs $0. Blocks PR if fail. |
-| 9 | Tier 2: LLM-as-Judge evals (every PR) | 5-row quick eval against golden dataset. Pass: weighted score >= 0.80, zero data accuracy FAILs. Judge model different from generation model. ~$1 per run. |
-| 10 | Tier 3: Human review (weekly) | QC reviews 10 outputs blind (without seeing LLM scores first), compares to LLM-Judge, identifies new failure patterns → new eval rows |
-| 11 | Auto-refinement run (if applicable) | AI-assisted skill improvement. Guardrails: max 5 modifications/session, $50 cap, all changes human-reviewed, hold-out set never exposed. |
-| 12 | PR review and merge | Skill/KB: 1 peer SA + 1 engineer. Code: 1 engineer (different from author). Infra: both engineers. All Tier 1 + Tier 2 must pass. |
+| 9 | <a href="javascript:void(0)" onclick="goDetail('eval-proof-before-pushing-non-negotiable')">Eval proof before pushing (non-negotiable)</a> | Run quick eval locally before submitting PR. Paste full eval output into PR description — not just a checkbox. Zero data accuracy FAILs. Reviewer must verify eval is real. |
+| 10 | Tier 2: LLM-as-Judge evals (every PR) | 5-row quick eval against golden dataset. Pass: weighted score >= 0.80, zero data accuracy FAILs. Judge model different from generation model. ~$1 per run. |
+| 11 | Tier 3: Human review (weekly) | QC reviews 10 outputs blind (without seeing LLM scores first), compares to LLM-Judge, identifies new failure patterns → new eval rows. SMEs provide gold-standard scoring for calibration. |
+| 12 | Auto-refinement run (if applicable) | AI-assisted skill improvement. Guardrails: max 5 modifications/session, $50 cap, all changes human-reviewed, hold-out set never exposed. |
+| 13 | <a href="javascript:void(0)" onclick="goDetail('conflict-resolution-how-to-handle-overlapping-work')">Handle conflicts + PR review</a> | Communicate ownership before starting. Small focused branches (< 2 days). If two people need same file → coordinate who merges first, second rebases + re-runs eval. Non-engineers never resolve merge conflicts — post in channel. <a href="javascript:void(0)" onclick="goDetail('pr-template-every-pr-must-include-this')">PR review:</a> Skill/KB = 1 peer SA + 1 engineer. Code = 1 different engineer. All Tier 1 + Tier 2 must pass. |
 
 **Gate 3 Checklist:**
 - [ ] Eval suite passes at agreed threshold (default: 85%+ weighted score)
