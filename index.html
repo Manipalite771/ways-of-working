@@ -120,6 +120,13 @@ button{cursor:pointer;font-family:inherit}
 .prose tbody tr:last-child td{border-bottom:none}
 .prose tbody tr:nth-child(even) td{background:var(--bgs)}
 .prose tbody tr:hover td{background:var(--bgh)}
+/* Level toggle */
+.lvl-bar{display:flex;align-items:center;gap:6px;margin-bottom:24px;padding:4px;background:var(--bg2);border-radius:var(--rl);width:fit-content}
+.lvl-btn{padding:7px 16px;border:none;border-radius:var(--r);font-size:12px;font-weight:500;font-family:var(--fb);color:var(--t3);background:transparent;transition:.2s}
+.lvl-btn:hover{color:var(--t1)}
+.lvl-btn.lvl-on{background:var(--bg1);color:var(--ac);box-shadow:var(--sh);font-weight:600}
+.lvl-hint{font-size:10.5px;color:var(--t4);margin-left:8px;font-style:italic}
+.lvl-view .prose{margin-top:0}
 /* Search overlay */
 .sov{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:100;display:none;align-items:flex-start;justify-content:center;padding-top:10vh;backdrop-filter:blur(3px)}
 .sov.on{display:flex}
@@ -171,6 +178,22 @@ button{cursor:pointer;font-family:inherit}
 </div>
 <div class="si" id="si-process-map" onclick="loadDoc('process-map')"><div class="si-dot" style="background:#16a34a"></div><div class="si-t"><div class="si-n">Process Map</div><div class="si-s">The operational playbook &mdash; what to do at every stage, step by step</div></div></div>
 <div class="st" id="st-process-map">
+<div id="st-pm-l1">
+<a class="" data-s="engagement-type-routing" onclick="scrollH('engagement-type-routing')">ENGAGEMENT TYPE ROUTING</a>
+<a class="" data-s="stage-0-intake-classification" onclick="scrollH('stage-0-intake-classification')">STAGE 0: INTAKE &amp; CLASSIFICATION</a>
+<a class="" data-s="stage-1-requirement-scoping" onclick="scrollH('stage-1-requirement-scoping')">STAGE 1: REQUIREMENT &amp; SCOPING</a>
+<a class="" data-s="stage-2-solutioning-workshop" onclick="scrollH('stage-2-solutioning-workshop')">STAGE 2: SOLUTIONING WORKSHOP</a>
+<a class="" data-s="stage-3-build-test" onclick="scrollH('stage-3-build-test')">STAGE 3: BUILD &amp; TEST</a>
+<a class="" data-s="stage-4-deploy-validate" onclick="scrollH('stage-4-deploy-validate')">STAGE 4: DEPLOY &amp; VALIDATE</a>
+<a class="" data-s="stage-5-operate-evolve" onclick="scrollH('stage-5-operate-evolve')">STAGE 5: OPERATE &amp; EVOLVE</a>
+<a class="" data-s="cross-cutting-applies-to-all-stages" onclick="scrollH('cross-cutting-applies-to-all-stages')">CROSS-CUTTING: APPLIES TO ALL STAGES</a>
+<a class="d3" data-s="scope-change-process" onclick="scrollH('scope-change-process')">Scope Change Process</a>
+<a class="d3" data-s="cost-governance" onclick="scrollH('cost-governance')">Cost Governance</a>
+<a class="d3" data-s="time-allocation" onclick="scrollH('time-allocation')">Time Allocation</a>
+<a class="d3" data-s="communication-cadence" onclick="scrollH('communication-cadence')">Communication Cadence</a>
+<a class="" data-s="type-d-bug-fix-fast-track" onclick="scrollH('type-d-bug-fix-fast-track')">TYPE D (BUG FIX) FAST-TRACK</a>
+</div>
+<div id="st-pm-l2" style="display:none">
 <a class="" data-s="how-to-use-this-document" onclick="scrollH('how-to-use-this-document')">HOW TO USE THIS DOCUMENT</a>
 <a class="d3" data-s="which-stages-apply" onclick="scrollH('which-stages-apply')">Which Stages Apply?</a>
 <a class="d3" data-s="how-to-classify-decision-tree" onclick="scrollH('how-to-classify-decision-tree')">How to Classify (Decision Tree)</a>
@@ -237,6 +260,21 @@ button{cursor:pointer;font-family:inherit}
 <a class="" data-s="quick-reference-the-entire-process-in-one-view" onclick="scrollH('quick-reference-the-entire-process-in-one-view')">QUICK REFERENCE: THE ENTIRE PROCESS IN ONE VIEW</a>
 <a class="" data-s="type-d-bug-fix-fast-track" onclick="scrollH('type-d-bug-fix-fast-track')">TYPE D (BUG FIX) FAST-TRACK</a>
 <a class="" data-s="pharma-regulatory-checklist" onclick="scrollH('pharma-regulatory-checklist')">PHARMA REGULATORY CHECKLIST</a>
+</div>
+<div id="st-pm-ex" style="display:none">
+<a class="" data-s="context" onclick="scrollH('context')">Context</a>
+<a class="" data-s="stage-0-intake-classification" onclick="scrollH('stage-0-intake-classification')">STAGE 0: INTAKE &amp; CLASSIFICATION</a>
+<a class="" data-s="stage-1-requirement-scoping" onclick="scrollH('stage-1-requirement-scoping')">STAGE 1: REQUIREMENT &amp; SCOPING</a>
+<a class="" data-s="stage-2-solutioning-workshop" onclick="scrollH('stage-2-solutioning-workshop')">STAGE 2: SOLUTIONING WORKSHOP</a>
+<a class="" data-s="stage-3-build-test" onclick="scrollH('stage-3-build-test')">STAGE 3: BUILD &amp; TEST</a>
+<a class="" data-s="stage-4-deploy-validate" onclick="scrollH('stage-4-deploy-validate')">STAGE 4: DEPLOY &amp; VALIDATE</a>
+<a class="" data-s="stage-5-operate-evolve" onclick="scrollH('stage-5-operate-evolve')">STAGE 5: OPERATE &amp; EVOLVE</a>
+<a class="" data-s="cross-cutting-applies-throughout-this-pilot" onclick="scrollH('cross-cutting-applies-throughout-this-pilot')">CROSS-CUTTING: APPLIES THROUGHOUT THIS PILOT</a>
+<a class="d3" data-s="scope-boundaries" onclick="scrollH('scope-boundaries')">Scope Boundaries</a>
+<a class="d3" data-s="cost-governance" onclick="scrollH('cost-governance')">Cost Governance</a>
+<a class="d3" data-s="timeline" onclick="scrollH('timeline')">Timeline</a>
+<a class="d3" data-s="success-criteria-summary" onclick="scrollH('success-criteria-summary')">Success Criteria Summary</a>
+</div>
 </div>
 <div class="sc">Core Framework</div>
 <div class="si" id="si-master-framework" onclick="loadDoc('master-framework')"><div class="si-dot" style="background:#4f46e5"></div><div class="si-t"><div class="si-n">Master Framework</div><div class="si-s">Architecture, Stages, Gates &amp; RACI</div></div></div>
@@ -812,7 +850,654 @@ button{cursor:pointer;font-family:inherit}
 </tbody>
 </table></div>
 </div></div></div>
-<div class="dv" id="dv-process-map"><div class="dt"><button class="dt-b" onclick="goHome()">&#8592; All Documents</button><span class="dt-c">Start Here &rsaquo; <b>Process Map</b></span></div><div class="db"><div class="dh"><div class="dh-badge" style="background:#16a34a18;color:#16a34a">Start Here</div><h1>Process Map</h1><div class="dh-sub">The operational playbook &mdash; what to do at every stage, step by step</div><div class="dh-m"><span>April 2026</span></div></div><div class="prose"><h1>GenAI Ways of Working — Process Map</h1>
+<div class="dv" id="dv-process-map"><div class="dt"><button class="dt-b" onclick="goHome()">&#8592; All Documents</button><span class="dt-c">Start Here &rsaquo; <b>Process Map</b></span></div><div class="db"><div class="dh"><div class="dh-badge" style="background:#16a34a18;color:#16a34a">Start Here</div><h1>Process Map</h1><div class="dh-sub">The operational playbook &mdash; what to do at every stage, step by step</div><div class="dh-m"><span>April 2026</span></div></div><div class="lvl-bar"><button class="lvl-btn lvl-on" id="lb-l1" onclick="switchLvl(1)">Quick Reference</button><button class="lvl-btn" id="lb-l2" onclick="switchLvl(2)">Full Detail</button><button class="lvl-btn" id="lb-ex" onclick="switchLvl(3)">Example Implementation</button><span class="lvl-hint" id="lvl-hint">Scannable one-liner per step. Click Full Detail for the complete playbook.</span></div><div class="prose lvl-view" id="lv-l1"><h1>GenAI Ways of Working — Process Map (Level 1)</h1>
+<blockquote>
+<p><strong>What this is:</strong> A scannable quick-reference for every stage. Each step is one line — enough to know what to do. If you need the full detail behind any line, go to the Process Map (Level 2) in the portal.</p>
+</blockquote>
+<hr />
+<h2 id="engagement-type-routing">ENGAGEMENT TYPE ROUTING</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>What</th>
+<th>Stages</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A</strong> — New Product / Major Feature</td>
+<td>Greenfield build or major new capability</td>
+<td>0 → 1 → 2 → 3 → 4 → 5 (all)</td>
+</tr>
+<tr>
+<td><strong>B</strong> — Significant Enhancement</td>
+<td>New section type, new doc format, skill overhaul</td>
+<td>0 → 2 → 3 → 4 → 5</td>
+</tr>
+<tr>
+<td><strong>C</strong> — Skill/KB Improvement</td>
+<td>Quality improvement on existing capability</td>
+<td>0 → 3 → 4</td>
+</tr>
+<tr>
+<td><strong>D</strong> — Bug Fix</td>
+<td>System not behaving per skill instructions</td>
+<td>Fix → Eval → Review → Deploy</td>
+</tr>
+<tr>
+<td><strong>E</strong> — Internal Tooling</td>
+<td>Tools for team workflow, not client-facing</td>
+<td>0 → 2 (light) → 3</td>
+</tr>
+<tr>
+<td><strong>F</strong> — Demo / Benchmark</td>
+<td>BD demo, competitive analysis</td>
+<td>0 → 2 (light) → time-boxed build</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Quick classifier:</strong> Bug? → D. Only skills/KBs change? → C. Internal use? → E. One-off demo? → F. Needs solutioning workshop? → A. Needs new eval data? → A or B. Everything else → B.</p>
+<hr />
+<h2 id="stage-0-intake-amp-classification">STAGE 0: INTAKE &amp; CLASSIFICATION</h2>
+<p><strong>Time:</strong> 30 minutes</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>What to do</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Log the request</td>
+<td>Capture source — client, internal, or production monitoring alert</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Classify engagement type (A–F)</td>
+<td>Use decision tree above; if unclear, default one level higher</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Assign Single-Threaded Owner (STO)</td>
+<td>One person accountable for this work end-to-end</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Identify applicable stages</td>
+<td>Based on engagement type — see routing table</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Assign priority (P0–P3)</td>
+<td>P0 = production down (same day), P1 = client-caught (2 days), P2 = planned (next sprint), P3 = backlog</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Enter into backlog</td>
+<td>With type, STO, stages, and priority all documented</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Gate 0 Checklist:</strong></p>
+<ul>
+<li>[ ] Engagement type classified (A/B/C/D/E/F)</li>
+<li>[ ] STO assigned</li>
+<li>[ ] Applicable stages identified</li>
+<li>[ ] Priority assigned (P0–P3)</li>
+<li>[ ] Entered into backlog</li>
+</ul>
+<hr />
+<h2 id="stage-1-requirement-amp-scoping">STAGE 1: REQUIREMENT &amp; SCOPING</h2>
+<p><strong>Time:</strong> 2–3 days of effort over 1–2 weeks
+<strong>Applies to:</strong> Type A. Type B only if requirements are not already clear.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>What to do</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Intake call (30 min)</td>
+<td>Understand problem at high level with BD/client lead; confirm engagement type</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Discovery session (1–2 hrs)</td>
+<td>Collect: manual process walkthrough, input sources, output specs, 3–5 good examples, bad examples, SOPs, style guides</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Define scalability parameters</td>
+<td>Max processing time, concurrent users, onboarding time (doc/template/client), error rate tolerance, cost per output, rework rate</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Plan golden dataset (2–4 hrs)</td>
+<td>Identify input-output pairs from examples; define 3–5 scoring dimensions (accuracy, completeness, interpretation, compliance, style); draft rubric; estimate row count</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Draft requirements document</td>
+<td>Problem statement, in-scope/out-of-scope, success criteria (quantified), input/output spec, quality thresholds, scalability params, deployment needs, regulatory requirements</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Internal review (1 hr)</td>
+<td>Engineer validates technical feasibility; leadership confirms capacity and strategy alignment</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Client sign-off (30 min + async)</td>
+<td>Walk through rubric — &quot;you're signing off on how we measure quality.&quot; Get explicit written agreement (email minimum)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Gate 1 Checklist:</strong></p>
+<ul>
+<li>[ ] Golden dataset exists OR plan + timeline to create it</li>
+<li>[ ] Scoring dimensions defined with rubric (3–5 dimensions)</li>
+<li>[ ] Success parameters quantified and agreed (accuracy, latency, cost)</li>
+<li>[ ] Scalability parameters defined (time, users, error rate, cost)</li>
+<li>[ ] Deployment environment identified</li>
+<li>[ ] Stakeholders identified and engagement model defined</li>
+<li>[ ] Client sign-off on rubric obtained (email confirmation minimum)</li>
+<li>[ ] Risk register initialized</li>
+<li>[ ] Competitive landscape documented (what commodity tools do, where we differentiate)</li>
+</ul>
+<hr />
+<h2 id="stage-2-solutioning-workshop">STAGE 2: SOLUTIONING WORKSHOP</h2>
+<p><strong>Time:</strong> 3 hrs (Type A), 1.5 hrs (Type B), 1 hr (Type E/F)
+<strong>Applies to:</strong> Type A (full), Type B (compressed), Type E/F (lightweight).</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>What to do</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Send pre-workshop packet (1–2 days before)</td>
+<td>Requirements summary, 2–3 possible approaches, reusable components from skills catalog, constraints, questions to resolve</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Context setting (15 min)</td>
+<td>Confirm everyone understands requirements; state the decisions to be made</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Walk the Complexity Ladder</td>
+<td>Decide architecture level: L1 Simple Chain → L2 Router → L3 Parallel → L4 Agent → L5 Multi-Agent. Default to lowest that works. Every step up must cite evidence.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Design architecture</td>
+<td>Agent topology, skill map, data flow. Which skills exist vs. need creation. KB requirements. Estimate LLM calls and cost per run. Engineer validates feasibility.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Define non-functional requirements</td>
+<td>Latency budget, concurrency, cost ceiling, security, deployment environment, pharma-specific (audit trail, data classification, retention)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Decide and assign (30 min)</td>
+<td>State decision with rationale. Assign skill owners. Set timeline with milestones. Capture all action items with owners + deadlines.</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Document workshop outputs</td>
+<td>Architecture diagram, complexity decision record, skills map with owners + effort, KB requirements, eval dataset plan, risk register update</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Gate 2 Checklist:</strong></p>
+<ul>
+<li>[ ] Architecture documented (diagram + decision record) and peer-reviewed</li>
+<li>[ ] Complexity level justified with evidence (not architectural ambition)</li>
+<li>[ ] Agent vs. non-agent decision explicitly documented with rationale</li>
+<li>[ ] Skills map finalized: existing (reuse), to-create, to-modify — with owners and effort</li>
+<li>[ ] KB requirements identified (structural, conventions, corrections)</li>
+<li>[ ] Engineering sign-off on feasibility (or documented note proceeding without it)</li>
+<li>[ ] Cost estimate within acceptable range</li>
+<li>[ ] Non-functional requirements defined (latency, concurrency, cost ceiling)</li>
+<li>[ ] Scalability approach defined (how will system meet Stage 1 parameters?)</li>
+<li>[ ] Risk register updated</li>
+</ul>
+<hr />
+<h2 id="stage-3-build-amp-test">STAGE 3: BUILD &amp; TEST</h2>
+<p><strong>Time:</strong> Type A: 2–4 sprints. Type C: 1–2 days. Type D: same day.
+<strong>Applies to:</strong> All engagement types (rigor varies).</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>What to do</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Codebase access provided to all</td>
+<td>Repo access granted; branch protection enabled on <code>main</code> (no direct pushes, require PR reviews)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Branch + contribution model decided</td>
+<td>Trunk-based dev with short-lived branches; naming: <code>{type}/{area}-{description}</code> (e.g., <code>skill/csr-s11-add-rule</code>)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Role-based permissions set</td>
+<td>SAs/QC edit skills, KBs, eval datasets. Engineers edit code, infra, configs. Engineers approve + merge all PRs. (See permission matrix)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>CODEOWNERS + PR template configured</td>
+<td>CODEOWNERS defines review ownership per directory; PR template requires: what changed, eval before/after, testing checklist</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Non-engineers onboarded on Git</td>
+<td>30-min guided walkthrough on sandbox repo — mandatory before first PR contribution</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Skills and KBs developed</td>
+<td>SAs use Cursor/Claude Code for skill/KB edits; engineers handle pipeline code. All changes on feature branches.</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Eval datasets built</td>
+<td>Golden dataset rows with input-output pairs, 3–5 scoring dimensions, edge cases included (25–30% of rows)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Tier 1: Automated code checks (every commit)</td>
+<td>Syntax, secrets scan, skill/KB schema validation, hallucination detection, cross-reference checks. Costs $0. Blocks PR if fail.</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Tier 2: LLM-as-Judge evals (every PR)</td>
+<td>5-row quick eval against golden dataset. Pass: weighted score &gt;= 0.80, zero data accuracy FAILs. Judge model different from generation model. ~$1 per run.</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Tier 3: Human review (weekly)</td>
+<td>QC reviews 10 outputs blind (without seeing LLM scores first), compares to LLM-Judge, identifies new failure patterns → new eval rows</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Auto-refinement run (if applicable)</td>
+<td>AI-assisted skill improvement. Guardrails: max 5 modifications/session, $50 cap, all changes human-reviewed, hold-out set never exposed.</td>
+</tr>
+<tr>
+<td>12</td>
+<td>PR review and merge</td>
+<td>Skill/KB: 1 peer SA + 1 engineer. Code: 1 engineer (different from author). Infra: both engineers. All Tier 1 + Tier 2 must pass.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Gate 3 Checklist:</strong></p>
+<ul>
+<li>[ ] Eval suite passes at agreed threshold (default: 85%+ weighted score)</li>
+<li>[ ] Zero FAIL on data accuracy dimension (binary, no tolerance)</li>
+<li>[ ] No single eval row below 0.70 weighted score</li>
+<li>[ ] Hold-out set passes (rows never seen during auto-refinement)</li>
+<li>[ ] Auto-refinement has run with documented improvement trajectory</li>
+<li>[ ] Cost per output within target</li>
+<li>[ ] Latency within target</li>
+<li>[ ] All code reviewed and approved by engineer (per CODEOWNERS)</li>
+<li>[ ] Known limitations documented</li>
+<li>[ ] Regression suite exists for ongoing monitoring</li>
+</ul>
+<hr />
+<h2 id="stage-4-deploy-amp-validate">STAGE 4: DEPLOY &amp; VALIDATE</h2>
+<p><strong>Time:</strong> 1–3 days
+<strong>Applies to:</strong> Type A, B, C engagements (Type D is fast-tracked).</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>What to do</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Deploy to staging</td>
+<td>Using deployment pipeline. Environment progression: Local → Sandbox → Shared Dev → Staging → Production. Never skip.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Run full eval suite in staging</td>
+<td>Must pass in deployed environment — not just local. Validates environment parity (deps, model access, data format).</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Compare staging vs. local scores</td>
+<td>If scores differ by &gt; 0.05 on weighted average → investigate before proceeding. Do NOT push to production with unexplained differences.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Pin model version</td>
+<td>Exact version in config (e.g., <code>claude-sonnet-4-5-20250929</code>), never &quot;latest.&quot; Document model upgrade and fallback process.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Set up production monitoring</td>
+<td>Structured logging (run_id, skill, model, latency, tokens, cost). Quality spot checks, cost dashboard, error/stall alerts.</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Document and test rollback procedure</td>
+<td>Identify rollback target version. Actually execute rollback once to verify it works — not just on paper.</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Create incident response runbook</td>
+<td>Severity levels (SEV-1 to SEV-4), escalation paths, communication templates, diagnosis decision tree.</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Security verified</td>
+<td>No secrets in code. Separate API keys per environment. <code>.env</code> gitignored. Secrets scanning active in CI.</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Cost tracking configured</td>
+<td>Every LLM call tagged: project, client, skill_id, skill_version, stage, run_id. Enables cost slicing.</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Deploy to production</td>
+<td>Engineer executes + leadership approves. Canary deploy (small traffic %) if applicable. Post-deploy: 3–5 smoke test requests + verify monitoring receives data.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Gate 4 Checklist:</strong></p>
+<ul>
+<li>[ ] Full eval suite passes in deployed environment (not just local)</li>
+<li>[ ] Monitoring dashboards live (quality, cost, performance, reliability)</li>
+<li>[ ] Rollback tested (procedure documented AND executed at least once)</li>
+<li>[ ] Incident response runbook exists with severity classification</li>
+<li>[ ] Model version pinned and documented</li>
+<li>[ ] Cost tracking tags configured per engagement</li>
+<li>[ ] Security: no secrets in code, separate keys per environment, <code>.env</code> gitignored</li>
+<li>[ ] Engineering/DevOps sign-off on deployment</li>
+</ul>
+<hr />
+<h2 id="stage-5-operate-amp-evolve">STAGE 5: OPERATE &amp; EVOLVE</h2>
+<p><strong>Time:</strong> 1–2 weeks for handoff. Ongoing for operations.
+<strong>Applies to:</strong> Type A, B engagements. Optional for C.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>What to do</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Assemble handoff package</td>
+<td>Architecture docs, all production skill files (versioned), KBs, full eval suite + hold-out set, known limitations, operational runbook, incident response plan, decision log</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Train delivery team (2–3 sessions, recorded)</td>
+<td>Session 1: system overview. Session 2: daily operations. Session 3: troubleshooting. Acceptance: team can explain system without builder help.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Validate delivery team independence</td>
+<td>Delivery team runs <code>python run_eval.py --mode full</code> on their own. If they can't, training is incomplete.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Define escalation tiers</td>
+<td>L1: delivery handles (known fix in runbook). L2: delivery + SA consult. L3: build team (needs skill/KB/code change). L4: leadership (architectural decision).</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Activate production feedback loop</td>
+<td>Client comments classified by QC: factual error → regression test row. Missing content → eval row. Style preference → corrections KB. Out-of-scope → back to Stage 0.</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Transfer monitoring ownership</td>
+<td>Daily: automated quality checks + cost dashboard review. Weekly: QC human review. Bi-weekly: full eval re-run. Monthly: quality trend report to stakeholders.</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Define support warranty period</td>
+<td>How long builders remain available for L3 escalations post-handoff</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Start &quot;weeks to independence&quot; tracking</td>
+<td>Target: zero L3 escalations within N weeks. If not trending toward zero, revisit training or runbook quality.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Gate 5 Checklist:</strong></p>
+<ul>
+<li>[ ] Handoff package complete (all artifacts) and reviewed by delivery team</li>
+<li>[ ] Delivery team trained (2–3 sessions minimum, recorded)</li>
+<li>[ ] Delivery team can run eval suite independently</li>
+<li>[ ] Escalation path defined and agreed (L1/L2/L3/L4)</li>
+<li>[ ] Eval monitoring ownership transferred</li>
+<li>[ ] Support warranty period defined (how long builders remain available)</li>
+<li>[ ] &quot;Weeks to independence&quot; tracking started (target: zero L3 escalations within N weeks)</li>
+</ul>
+<hr />
+<h2 id="cross-cutting-applies-to-all-stages">CROSS-CUTTING: APPLIES TO ALL STAGES</h2>
+<h3 id="scope-change-process">Scope Change Process</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>What to do</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Acknowledge</td>
+<td>&quot;Let me assess the impact.&quot; Never agree or commit on the call.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Impact assessment (2–4 hrs)</td>
+<td>Does this change the eval rubric? Need new skills/KBs? Effort estimate? Timeline impact? Cost impact?</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Present options</td>
+<td>(a) Add to scope with adjusted timeline. (b) Replace another item. (c) Defer to Phase 2.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Get explicit agreement</td>
+<td>Document the decision in writing.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Update everything</td>
+<td>Requirements, eval dataset, sprint backlog, stakeholder comms.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="cost-governance">Cost Governance</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Daily Spend</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt; $10/day per project</td>
+<td>Auto-approved</td>
+</tr>
+<tr>
+<td>$10–50/day</td>
+<td>SA reviews</td>
+</tr>
+<tr>
+<td>$50–100/day</td>
+<td>Leadership notified</td>
+</tr>
+<tr>
+<td>&gt; $100/day</td>
+<td>Leadership approval to continue</td>
+</tr>
+<tr>
+<td>Any single run &gt; $20</td>
+<td>Engineer reviews after the fact</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="time-allocation">Time Allocation</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Building</strong> (product development)</td>
+<td><strong>60–70%</strong></td>
+</tr>
+<tr>
+<td><strong>Delivery</strong> (client support, BAU)</td>
+<td><strong>20–30%</strong></td>
+</tr>
+<tr>
+<td><strong>Learning</strong> (upskilling, research)</td>
+<td><strong>10%</strong> (protected, not optional)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="communication-cadence">Communication Cadence</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Meeting</th>
+<th>Frequency</th>
+<th>Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Daily standup</td>
+<td>Daily</td>
+<td>15 min</td>
+</tr>
+<tr>
+<td>Sprint review</td>
+<td>Bi-weekly</td>
+<td>1 hr</td>
+</tr>
+<tr>
+<td>Tech talk</td>
+<td>Bi-weekly (alternates with sprint review)</td>
+<td>1 hr</td>
+</tr>
+<tr>
+<td>Leadership update</td>
+<td>Bi-weekly</td>
+<td>30 min</td>
+</tr>
+<tr>
+<td>Engineering sync</td>
+<td>Weekly</td>
+<td>30 min</td>
+</tr>
+<tr>
+<td>WoW retro</td>
+<td>Quarterly</td>
+<td>2 hrs</td>
+</tr>
+<tr>
+<td>Client status</td>
+<td>Weekly (written) + Monthly (demo)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="type-d-bug-fix-fast-track">TYPE D (BUG FIX) FAST-TRACK</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>What to do</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Identify the bug</td>
+<td>What is system doing wrong vs. what skill instructions say?</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Create branch</td>
+<td><code>fix/{area}-{short-description}</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Fix the skill, KB, or code</td>
+<td>Targeted change only</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Run quick eval (5 rows)</td>
+<td>Must pass, zero regressions on previously-passing rows</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Add regression test row</td>
+<td>New eval row that specifically catches this bug</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Submit PR with eval results</td>
+<td>Include before/after scores</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Engineer reviews and approves</td>
+<td>—</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Deploy</td>
+<td>Same day for simple fixes, 1–2 days if eval dataset needs new rows</td>
+</tr>
+</tbody>
+</table></div>
+</div><div class="prose lvl-view" id="lv-l2" style="display:none"><h1>GenAI Ways of Working — Process Map</h1>
 <blockquote>
 <p><strong>Purpose:</strong> This is the operational playbook. Every stage tells you exactly what to do, what to produce, what must be true before you move on, and what to do when things go wrong. If you're new to the team, start here.</p>
 </blockquote>
@@ -3304,6 +3989,907 @@ Postmortem (within 48 hours for SEV-1/2):
 </tbody>
 </table></div>
 <p><strong>Default position for most current engagements:</strong> System produces drafts that humans review. It's a &quot;productivity tool,&quot; not a &quot;validated system.&quot; Frame to clients: &quot;Your team's review is the validation step. Our eval framework ensures draft quality is consistently high enough for efficient review.&quot;</p>
+</div><div class="prose lvl-view" id="lv-ex" style="display:none"><h1>Example Implementation: SCA Module 2 (MedComm) Agentic Transformation</h1>
+<blockquote>
+<p><strong>What this is:</strong> A concrete, stage-by-stage walkthrough of the WoW process applied to a real pilot. Read this to see exactly what each stage looks like in practice.</p>
+</blockquote>
+<hr />
+<h2 id="context">Context</h2>
+<p><strong>Platform:</strong> Scientific Content Automation (SCA) Module 2, informally called MedComm. Generates visual medical communications assets (slides, infographics, posters, emailers) from source documents.</p>
+<p><strong>Current state:</strong></p>
+<ul>
+<li>12-stage sequential prompt pipeline (Pre-1 through Stage 13) with 4 sub-stages in Stage 10</li>
+<li>Custom orchestration via Celery tasks (15 concurrent workers, Redis broker, 4-hour task timeout)</li>
+<li>Multi-provider LLM: Gemini 3 Pro + 2.5 Pro (content/layout), Claude Sonnet 3.7 via Bedrock (design/iteration)</li>
+<li>FastAPI backend, React frontend with in-browser JSX/Babel compilation</li>
+<li>PostgreSQL (SQLAlchemy reflection), S3 storage, Playwright screenshots, Adobe PDF generation</li>
+</ul>
+<p><strong>Target state:</strong></p>
+<ul>
+<li>Agentic platform (Strands framework under evaluation)</li>
+<li>Prompts converted to versioned <code>skills.md</code> files</li>
+<li>Complex service logic converted to agent-callable tools</li>
+<li>Eval datasets for every pipeline stage (content + visual)</li>
+<li>Engineer + non-engineer collaboration per WoW process</li>
+</ul>
+<p><strong>Why rearchitect:</strong> Current orchestration pipeline is brittle — bugs are frequent and hard to trace due to complex inter-stage dependencies, custom Celery routing, and tightly coupled prompt logic. Extending to new asset types requires modifying multiple stages. Agentic architecture with clear skill boundaries, tool abstractions, and eval coverage should improve debuggability, quality, and scalability.</p>
+<hr />
+<h2 id="stage-0-intake-amp-classification">STAGE 0: INTAKE &amp; CLASSIFICATION</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Action Item</th>
+<th>SCA/MedComm Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Log the request</td>
+<td>&quot;Rearchitect SCA Module 2 with agentic principles to improve quality, debuggability, and scalability across asset types&quot;</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Classify engagement type</td>
+<td><strong>Type A — New Product / Major Feature.</strong> Fundamental rearchitecture, not an enhancement. All stages apply (0 through 5).</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Assign STO</td>
+<td>One person accountable end-to-end — the SA who understands both the current pipeline and the agentic target state</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Identify applicable stages</td>
+<td>All stages: 0 → 1 → 2 → 3 → 4 → 5. No stages skipped — this is greenfield agentic architecture on an existing domain.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Assign priority</td>
+<td><strong>P2 — Planned Enhancement.</strong> Strategic, not urgent. Timeline: next 2-3 sprints for initial build.</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Enter into backlog</td>
+<td>Type A, STO named, all stages, P2, estimated 10-12 week pilot</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Gate 0 Outputs:</strong></p>
+<ul>
+<li>[x] Type: A (New Product / Major Feature)</li>
+<li>[x] STO: [Named person]</li>
+<li>[x] Stages: 0 → 1 → 2 → 3 → 4 → 5</li>
+<li>[x] Priority: P2</li>
+<li>[x] Backlog: Entered</li>
+</ul>
+<hr />
+<h2 id="stage-1-requirement-amp-scoping">STAGE 1: REQUIREMENT &amp; SCOPING</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Action Item</th>
+<th>SCA/MedComm Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Intake call (30 min)</td>
+<td>Internal call — self-initiated rearchitecture, not client-driven. Attendees: SA + Engineering lead. Confirm: converting existing 12-stage pipeline to agentic system, not building from scratch.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Discovery — map current pipeline</td>
+<td>Document all 12+ stages end-to-end with provider, prompt key, input, output, and dependencies for each:</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Pre-1:</strong> Parse reference asset images (Claude via Bedrock)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Stage 1:</strong> Extract all content from source PDFs — text, tables, figures, flowcharts as Mermaid, equations. Per-page output with <code>=== PAGE n ===</code> headers. (Gemini 3 Pro)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Stage 2:</strong> Generate hierarchical XML outline <code>&lt;Asset&gt; → &lt;Part&gt; → &lt;Component&gt; → &lt;Sub-Component&gt;</code> based on asset type, dimensions, topic. Two variants: vertical and horizontal. (Gemini 2.5 Pro)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Stage 3:</strong> Flesh out each component with detailed content. Iterates through <code>&lt;part&gt;</code> elements, extracts titles to keyed output (&quot;1_Title&quot;, &quot;2_Title&quot;). (Gemini 2.5 Pro)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Stages 5-8:</strong> Design spec chain — 4 sequential stages using Claude. Stage 5 (spec from images) → Stage 6 (spec refinement) → Stage 7 (design feedback) → Stage 8 (final design parse). Each depends on prior stage + reference images.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Stage 9:</strong> Generate design spec from template or images. Template-driven path.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Stage 10:</strong> Section-level processing with 4 sub-stages per section — (10.1) section layout generation, (10.2) layout feedback/validation, (10.3) section fit to PDF dimensions via screenshot, (10.4) fit feedback/validation. Template-specific model overrides (az-infographic, slide-deck use Gemini 3 Pro). Playwright screenshots for visual validation.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Stage 11:</strong> HTML → PDF conversion. Two paths: SimpleSSRBridge (React/HTML → full HTML, 120s timeout) then Playwright PDF (1280x780 viewport). Adobe PDF Services as enterprise path with credential rotation.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Stages 12-13:</strong> Code iteration from user comments. Stage 12 = first pass, Stage 13 = second pass (depends on Stages 1+11). Both use Claude.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Collect inputs and outputs</td>
+<td><strong>Inputs:</strong> Source PDFs (up to 1GB), reference asset images, asset type selection (poster/slide deck/infographic/emailer/microsite), template selection (6 slide-deck variants, poster templates, etc.), topic/description, user comments for iteration. <strong>Outputs:</strong> XML content outline, section content (HTML with citations), design specs, section layouts (HTML/CSS), screenshots (PNG via Playwright), final PDF asset.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Collect good/bad examples</td>
+<td>Gather 5+ existing MedComm assets across types: 2 slide decks, 1 infographic, 1 poster, 1 emailer. For each, document: what was good (accurate content, proper layout, correct citations) and what failed (content hallucinations, layout overflow, broken Mermaid diagrams, citation mismatches, wrong asset dimensions).</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Define scalability parameters</td>
+<td><strong>Max processing time:</strong> Current 5-8 min end-to-end; target same or better. <strong>Concurrent users:</strong> Currently 15 Celery workers; target 10+ simultaneous projects. <strong>Time to onboard new asset type:</strong> Currently requires new prompts + template overrides (days); target: add skills + template config (hours). <strong>Cost per asset:</strong> Currently $2-5 per asset (multi-model); target same or lower. <strong>Error rate:</strong> Currently frequent orchestration bugs; target &lt; 5% pipeline failures. <strong>Rework rate:</strong> Target &lt; 20% of outputs need human correction.</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Plan golden dataset</td>
+<td><strong>Content quality dataset (15-20 rows):</strong> Outline quality (completeness, hierarchy, topic relevance), section content (accuracy, citations, interpretation). <strong>Visual quality dataset (10-15 rows):</strong> Layout quality (no overflow, correct viewport), template compliance, screenshot fidelity. <strong>Edge cases (25-30% of rows):</strong> Complex tables in source PDFs, Mermaid flowcharts, multi-column layouts, very long content exceeding page bounds, OCR-artifact PDFs.</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Define scoring dimensions</td>
+<td>1. <strong>Data Accuracy</strong> (PASS/FAIL) — every claim traceable to source, no hallucinated drug names/data. 2. <strong>Content Completeness</strong> (checklist) — all outline sections present, all citations linked. 3. <strong>Visual Quality</strong> (1-5) — layout renders correctly, no overflow/truncation, fonts and colors per template. 4. <strong>Template Compliance</strong> (checklist) — matches selected template structure and asset dimensions. 5. <strong>Source Fidelity</strong> (1-5) — content accurately represents source PDFs, tables and figures correctly interpreted.</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Draft requirements document</td>
+<td><strong>Problem:</strong> Current prompt-chain pipeline is brittle and hard to extend. <strong>Solution:</strong> Agentic rearchitecture. <strong>Success criteria:</strong> Content eval &gt;= 85%, visual quality &gt;= 4/5, pipeline failure &lt; 5%, time-to-new-asset-type &lt; 1 day. <strong>Out of scope:</strong> Frontend redesign, auth changes, new asset types (post-pilot), database schema changes.</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Internal review (1 hr)</td>
+<td>Engineer validates: Is Strands framework viable for this use case? Can Celery infra be replaced incrementally or must it be swapped wholesale? What about Playwright/Adobe/S3 dependencies — do they become tools cleanly? Leadership confirms: capacity for 2-3 sprints of rearchitecture alongside ongoing delivery.</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Sign-off</td>
+<td>Internal sign-off — SA + Engineering + Leadership agree on rubric, success criteria, and sprint capacity. No external client for this pilot.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Gate 1 Outputs:</strong></p>
+<ul>
+<li>[x] Current pipeline fully documented (12+ stages with providers, prompts, I/O, dependencies)</li>
+<li>[x] Golden dataset plan: 15-20 content rows + 10-15 visual rows + edge cases</li>
+<li>[x] 5 scoring dimensions defined with rubrics</li>
+<li>[x] Scalability parameters quantified (processing time, concurrency, cost, error rate, onboarding time)</li>
+<li>[x] Requirements document drafted and internally reviewed</li>
+<li>[x] Strands framework feasibility assessed</li>
+<li>[x] Risk register initialized</li>
+</ul>
+<hr />
+<h2 id="stage-2-solutioning-workshop">STAGE 2: SOLUTIONING WORKSHOP</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Action Item</th>
+<th>SCA/MedComm Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Send pre-workshop packet</td>
+<td>Distribute: (a) Current 12-stage pipeline diagram with LLM providers and dependencies, (b) Strands framework overview + comparison with alternatives, (c) Proposed agent topology draft, (d) Full prompt-to-skill mapping table, (e) Full service-to-tool mapping table, (f) Constraints: must preserve existing API contracts (FastAPI endpoints, S3 structure, DB schema)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Walk the Complexity Ladder</td>
+<td><strong>Current system: Level 2 (Router) + Level 3 (Parallel).</strong> Stage 10 processes sections in parallel; different stages route to different providers (Gemini vs Claude). <strong>Target system: Level 5 (Multi-Agent).</strong> Justification: single agent cannot hold context for 12+ stages spanning content generation, visual design, rendering, and iteration. Specialized agents produce better outputs in their domain. Current pipeline already has natural agent boundaries (content vs design vs rendering vs iteration). <strong>Evidence needed:</strong> Run single-agent vs multi-agent on 10 test inputs during first sprint to validate the split.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Design agent topology</td>
+<td>Four specialized agents under one orchestrator:</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Orchestrator Agent</strong> — Receives user request (asset type, template, topic, sources). Plans execution sequence. Delegates to specialized agents. Manages cross-agent state. Handles error recovery and retries.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>ContentAgent</strong> (Stages 1-3) — PDF parsing, outline generation, section content fleshing. Owns the content creation lifecycle.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>DesignAgent</strong> (Stages 5-9) — Design spec generation chain. Produces visual design specifications from reference images and templates.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>RenderAgent</strong> (Stages 10-11) — Section-level layout, fit, screenshot capture, PDF generation. Handles the 4 sub-stage loop per section. Owns Playwright and Adobe tool interactions.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>IterationAgent</strong> (Stages 12-13) — Processes user comments/annotations/drawings into code modifications. Produces new asset versions.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Map all prompts to skills.md</td>
+<td>Every <code>PROMPT_STAGE_MAPPING</code> entry becomes a versioned skill file:</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>skills/sca/image-parsing.md</code> — Pre-1 (Claude) — Parse reference asset images</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>skills/sca/pdf-extraction.md</code> — Stage 1 (Gemini 3 Pro) — Extract text, tables, figures, Mermaid, equations from PDFs</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>skills/sca/outline-generation-vertical.md</code> — Stage 2 variant (Gemini 2.5 Pro) — Vertical XML outline</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>skills/sca/outline-generation-horizontal.md</code> — Stage 2 variant (Gemini 2.5 Pro) — Horizontal XML outline</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>skills/sca/section-fleshing.md</code> — Stage 3 (Gemini 2.5 Pro) — Flesh out component content with citations</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>skills/sca/design-spec-s1.md</code> — Stage 5 (Claude) — Design spec stage 1 from images</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>skills/sca/design-spec-s2.md</code> — Stage 6 (Claude) — Design spec stage 2 refinement</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>skills/sca/design-feedback.md</code> — Stage 7 (Claude) — Design feedback and validation</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>skills/sca/final-design-parser.md</code> — Stage 8 (Claude) — Parse final design specification</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>skills/sca/section-layout.md</code> — Stage 10.1 (Gemini 2.5/3 Pro) — Generate HTML/CSS layout per section</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>skills/sca/section-layout-feedback.md</code> — Stage 10.2 (Gemini 2.5 Pro) — Validate and refine layout</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>skills/sca/section-fit.md</code> — Stage 10.3 (Gemini 2.5 Pro) — Adjust layout to fit PDF page dimensions</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>skills/sca/section-fit-feedback.md</code> — Stage 10.4 (Gemini 2.5 Pro) — Validate final section fit</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>skills/sca/code-iteration-s1.md</code> — Stage 12 (Claude) — First-pass code iteration from user feedback</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>skills/sca/code-iteration-s2.md</code> — Stage 13 (Claude) — Second-pass iteration (depends on Stage 1 + 11 context)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Total: 15 skill files.</strong> Each includes: system prompt, user prompt template, model, output format, version metadata.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Map services to tools</td>
+<td>Complex service logic becomes agent-callable tools:</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>tools/playwright-screenshot</code> — Launch headless Chromium, set viewport to asset_dimensions, wait for images/fonts/Canvas/SVG, capture PNG, cleanup local files</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>tools/pdf-generator</code> — Two paths: Playwright HTML→PDF (1280x780, print_background=True) + Adobe PDF Services with credential rotation (APIKeyManager, multiple client_id/secret pairs)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>tools/s3-file-manager</code> — Presigned URL generation (15-min expiry), staging-to-permanent copy, LLM payload storage at <code>llm-payloads/</code> prefix</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>tools/llm-queue</code> — Wraps existing GlobalLLMQueue: 15 concurrent workers, 4 RPS rate limit, 3 retries with exponential backoff, 300s timeout, status tracking (QUEUED→PROCESSING→COMPLETED/FAILED/TIMEOUT)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>tools/xml-parser</code> — Parse and serialize the <code>&lt;Asset&gt;→&lt;Part&gt;→&lt;Component&gt;→&lt;Sub-Component&gt;</code> XML outline structure, handle recursive nesting and tag balancing</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>tools/section-processor</code> — Iterate through Stage 3 keyed output, extract titles, produce per-section data structure for Stage 10 processing</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>tools/image-renderer</code> — Render Mermaid diagrams to images, process figures extracted from PDFs (DPI_SCALE=2.0, CHUNK_SIZE=10)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><code>tools/template-resolver</code> — Resolve template-specific overrides (TEMPLATE_STAGE10_PROMPT_OVERRIDES for az-infographic, az-slide-deck, slide-deck) and asset dimensions</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Total: 8 tools.</strong></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Define KB requirements</td>
+<td><strong>Structural KBs:</strong> <code>kb/sca/asset-types.md</code> (definitions and constraints per asset type — poster, slide deck, infographic, emailer, microsite, custom). <code>kb/sca/template-catalog.md</code> (available templates per type with dimensions, color schemes, layout rules, preview references). <code>kb/sca/xml-outline-schema.md</code> (the XML structure specification and valid nesting rules). <strong>Conventions KBs:</strong> <code>kb/sca/medical-writing-conventions.md</code> (MedComm-specific language — abbreviations, citation format, regulatory language). <code>kb/sca/design-principles.md</code> (visual layout rules — spacing, font hierarchy, color usage per brand). <strong>Corrections KBs:</strong> <code>kb/sca/common-failures.md</code> (known failure patterns from production bugs — content overflow, citation mismatches, Mermaid rendering issues, and how to avoid them).</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Non-functional requirements</td>
+<td><strong>Latency:</strong> End-to-end &lt; 8 min (current: 5-8 min). <strong>Concurrency:</strong> 10+ simultaneous projects. <strong>Cost:</strong> &lt; $5 per asset. <strong>Model tiering:</strong> Gemini 3 Pro for visual tasks (PDF extraction, section layout), Gemini 2.5 Pro for text tasks (outline, content), Claude Sonnet 3.7 for reasoning tasks (design specs, iteration). <strong>Fallback:</strong> Gemini 3 Pro → Gemini 2.5 Pro with 30s/60s delays (preserve current chain). <strong>Infrastructure:</strong> Must work with existing PostgreSQL schema, S3 bucket structure, Redis broker.</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Framework decision</td>
+<td>Evaluate Strands against criteria: multi-agent with tool use support? Rate-limited LLM queue integration? Celery/Redis compatibility? Handles Stage 10's 4-sub-stage parallel-per-section pattern? Document decision with rationale. If Strands rejected, identify alternative or plan for custom lightweight orchestration.</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Risk register</td>
+<td><strong>R1:</strong> Strands may not support all required patterns — Mitigation: evaluate in Sprint 1, fall back to custom orchestration. <strong>R2:</strong> Visual quality eval is subjective — Mitigation: define rubric with measurable criteria (no overflow, correct dimensions, text readability). <strong>R3:</strong> Agentic overhead may increase latency — Mitigation: benchmark early in Sprint 1, optimize agent handoffs. <strong>R4:</strong> 15 skills + 8 tools is a large surface area — Mitigation: build ContentAgent first as pattern validation before expanding. <strong>R5:</strong> Preserving API contracts while swapping orchestration — Mitigation: feature flag to route between old and new pipeline.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Gate 2 Outputs:</strong></p>
+<ul>
+<li>[x] Architecture: Multi-Agent Level 5 — Orchestrator + ContentAgent + DesignAgent + RenderAgent + IterationAgent</li>
+<li>[x] Complexity decision justified: single-agent insufficient for 12+ stages spanning content, design, rendering, iteration</li>
+<li>[x] Skills map: 15 files with owners and effort estimates</li>
+<li>[x] Tools map: 8 tools mapped from current services</li>
+<li>[x] KB requirements: 3 structural + 2 conventions + 1 corrections</li>
+<li>[x] Framework decision documented (Strands or alternative)</li>
+<li>[x] Non-functional requirements defined</li>
+<li>[x] Risk register: 5 identified risks with mitigations</li>
+<li>[x] Timeline: Sprint 1 = ContentAgent, Sprint 2 = DesignAgent + RenderAgent, Sprint 3 = IterationAgent + integration</li>
+</ul>
+<hr />
+<h2 id="stage-3-build-amp-test">STAGE 3: BUILD &amp; TEST</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Action Item</th>
+<th>SCA/MedComm Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Repo and branch setup</td>
+<td>Create branch: <code>feature/sca-agentic-rearchitecture</code>. Enable branch protection on <code>main</code>. Configure CODEOWNERS: <code>/skills/sca/</code> → SA team, <code>/tools/</code> → engineering, <code>/eval-datasets/sca/</code> → QC + SA, <code>/pipeline/</code> → engineering only. Add PR template with eval result fields.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Role-based permissions</td>
+<td><strong>SAs</strong> create and edit all 15 skill files, all KBs, eval datasets. <strong>Engineers</strong> implement 8 tools, agent framework integration, Orchestrator, API wiring. <strong>QC</strong> builds eval datasets, runs Tier 3 human reviews. SAs use Cursor/Claude Code for skill editing, engineers handle all <code>.py</code> files.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Non-engineers onboarded</td>
+<td>30-min guided Git walkthrough for SAs and QC on sandbox repo. Cover: branch creation (<code>skill/sca-outline-improve</code>), editing skill files, running local eval, committing, pushing, creating PRs. Mandatory before first contribution.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Sprint 1: ContentAgent (Weeks 4-5)</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Engineer: ContentAgent skeleton</td>
+<td>Implement ContentAgent in chosen framework. Wire up tool integrations: <code>llm-queue</code> (wrapping existing GlobalLLMQueue singleton), <code>xml-parser</code>, <code>section-processor</code>, <code>image-renderer</code>. Agent receives: source PDFs + asset type + template + topic. Agent produces: parsed content → XML outline → fleshed section content.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>SA: Convert content skills (4 files)</td>
+<td><code>skills/sca/pdf-extraction.md</code> — from <code>pdf_gemini-3-pro-preview</code> prompt. System prompt + user prompt template + model spec + output format (per-page with <code>=== PAGE n ===</code> headers). <code>skills/sca/outline-generation-vertical.md</code> + <code>horizontal.md</code> — from outline prompts. Include: XML schema specification, asset type constraints, dimension-aware formatting. <code>skills/sca/section-fleshing.md</code> — from <code>flesh_gemini-2.5-pro</code>. Include: iteration pattern through <code>&lt;part&gt;</code> elements, title extraction to keyed output. <code>skills/sca/image-parsing.md</code> — from <code>image_bedrock-sonnet3.7</code>.</td>
+</tr>
+<tr>
+<td>6</td>
+<td>QC + SA: Content eval dataset (15 rows)</td>
+<td><strong>Outline quality (5 rows):</strong> Input: source PDFs + asset type + topic. Expected: well-structured XML matching template schema. Scoring: completeness (all parts present), hierarchy (proper <code>&lt;Part&gt;→&lt;Component&gt;→&lt;Sub-Component&gt;</code> nesting), topic relevance. <strong>Section content (7 rows):</strong> Input: outline + source docs. Expected: accurate, cited content per section. Scoring: data accuracy (PASS/FAIL — zero tolerance), completeness, source fidelity. <strong>Edge cases (3 rows):</strong> Complex tables spanning multiple PDF pages, Mermaid flowcharts in source, 50+ page PDFs with OCR artifacts.</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Sprint 1 validation</td>
+<td>Run ContentAgent on all 15 eval rows. Target: content weighted score &gt;= 0.80, zero data accuracy FAILs. Compare output against current Stage 1-3 pipeline output on same inputs — agentic must match or exceed.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Sprint 2: DesignAgent + RenderAgent (Weeks 6-7)</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td>Engineer: DesignAgent</td>
+<td>Implement DesignAgent wrapping Stage 5-8 chain. Sequential skill execution: design-spec-s1 → design-spec-s2 → design-feedback → final-design-parser. Each step depends on prior output + reference images from S3.</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Engineer: RenderAgent</td>
+<td>Implement RenderAgent handling Stage 10's 4-sub-stage pattern. <strong>Per section:</strong> (10.1) section-layout skill → (10.2) layout-feedback skill → screenshot via <code>playwright-screenshot</code> tool → (10.3) section-fit skill → (10.4) fit-feedback skill. Handle template-specific model overrides via <code>template-resolver</code> tool (az-infographic, az-slide-deck, slide-deck all use Gemini 3 Pro). Wire up <code>pdf-generator</code> tool for Stage 11: SimpleSSRBridge (React→HTML, 120s timeout) then Playwright PDF (1280x780 viewport, print_background=True). Adobe path with credential rotation via APIKeyManager.</td>
+</tr>
+<tr>
+<td>10</td>
+<td>SA: Convert design + render skills (8 files)</td>
+<td>Design skills: <code>design-spec-s1.md</code>, <code>design-spec-s2.md</code>, <code>design-feedback.md</code>, <code>final-design-parser.md</code> — all from Claude-based prompts, each referencing image inputs. Render skills: <code>section-layout.md</code> (with model variant per template type), <code>section-layout-feedback.md</code>, <code>section-fit.md</code> (input: screenshot + PDF dimensions), <code>section-fit-feedback.md</code>.</td>
+</tr>
+<tr>
+<td>11</td>
+<td>QC + SA: Visual eval dataset (10 rows)</td>
+<td><strong>Layout quality (4 rows):</strong> Input: section content + asset dimensions (e.g., 1920x1080 for slides). Expected: properly fitted HTML/CSS. Scoring: no overflow/truncation, correct viewport, text readable, images loaded and positioned. <strong>Template compliance (3 rows):</strong> Input: content + specific template (slide-deck variant, poster, infographic). Expected: output matches template structure and brand rules. <strong>Screenshot fidelity (3 rows):</strong> Input: rendered HTML. Expected: clean PNG capture via Playwright. Scoring: no rendering artifacts, correct pixel dimensions, all elements visible (fonts, Canvas, SVG rendered).</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Sprint 3: IterationAgent + Integration (Weeks 8-9)</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>12</td>
+<td>Engineer: IterationAgent</td>
+<td>Implement IterationAgent wrapping Stages 12-13. Input: user comment text + annotations + drawing data + edit changes (text/style modifications from frontend's 3 edit modes). Output: updated asset code. Stage 13 depends on Stage 1 (source context) + Stage 11 (current asset) — IterationAgent must access cross-agent state.</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Engineer: Orchestrator integration</td>
+<td>Wire all 4 agents under Orchestrator. Full flow: user request → Orchestrator → ContentAgent (parse → outline → flesh) → DesignAgent (design spec chain) → RenderAgent (layout → fit → PDF per section) → output. Iteration flow: user comment → Orchestrator → IterationAgent → RenderAgent → updated asset. <strong>Preserve existing API contracts:</strong> FastAPI endpoints (<code>/chatwithpdf/upload-source-documents</code>, <code>/chatwithpdf/stages</code>, <code>/chatwithpdf/stages-mix</code>), S3 bucket structure (<code>chats/{chat_id}/</code>), database schema (STAGES, REVISIONS, SECTIONS tables). Feature flag: <code>USE_AGENTIC_PIPELINE=True/False</code> to route between old Celery pipeline and new agentic pipeline.</td>
+</tr>
+<tr>
+<td>14</td>
+<td>SA: Convert iteration skills + KBs</td>
+<td>Skills: <code>code-iteration-s1.md</code>, <code>code-iteration-s2.md</code> — from Claude-based prompts. KB: <code>kb/sca/common-failures.md</code> — compiled from production bug patterns (content overflow at page boundaries, citation index mismatches, Mermaid syntax breaking in specific diagram types, Adobe credential timeout patterns).</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Testing (Continuous Across All Sprints)</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>15</td>
+<td>Tier 1: Automated checks (every commit)</td>
+<td>Pre-commit hooks: Python syntax (Ruff), secrets detection, skill file schema validation (frontmatter must include: name, version, product_area, model, execution_mode), KB format validation (valid markdown with required sections). Custom checks: hallucinated drug name detection (only names from source PDFs allowed in output), XML schema validation (outline must be valid <code>&lt;Asset&gt;</code> structure with proper nesting).</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Tier 2: LLM-as-Judge evals (every PR)</td>
+<td><strong>Content eval (5-row quick):</strong> Judge model: Claude Opus (never the same model that generated the output). Dimensions: data accuracy (PASS/FAIL), content completeness, source fidelity. Pass criteria: weighted &gt;= 0.80, zero data accuracy FAILs. <strong>Visual eval (5-row quick):</strong> Judge: Gemini 2.5 Pro with image input (screenshot of rendered asset). Dimensions: layout quality, template compliance, visual readability. Note: visual eval requires multi-modal judge — screenshot is the input, not just code.</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Tier 3: Human review (weekly)</td>
+<td>QC reviews 10 assets per week: 3 slide decks, 3 infographics, 2 posters, 2 emailers. Review blind (without seeing LLM-Judge scores first). Compare agentic output vs. current pipeline output on same inputs. Track: where agentic is better, where it's worse, novel failure modes not caught by automated evals. New failure patterns → new eval rows.</td>
+</tr>
+<tr>
+<td>18</td>
+<td>A/B comparison</td>
+<td>Run same 15-20 inputs through both current Celery pipeline and new agentic pipeline. Compare on all dimensions: quality scores, end-to-end latency, per-asset cost (broken down by agent), pipeline failure rate. <strong>This is the key gate</strong> — agentic system must be at parity or better on all dimensions before proceeding.</td>
+</tr>
+<tr>
+<td>19</td>
+<td>Auto-refinement</td>
+<td>Run AI-assisted improvement on content skills (<code>outline-generation.md</code>, <code>section-fleshing.md</code>) using eval feedback. Guardrails: max 5 modifications per session, $50 cost cap, all changes human-reviewed before merge. Hold-out set (3 content rows + 2 visual rows) never exposed to auto-refinement — used only for final validation.</td>
+</tr>
+<tr>
+<td>20</td>
+<td>PR review and merge</td>
+<td><strong>Sprint 1 PR:</strong> ContentAgent + 4 skills + content eval dataset (15 rows). <strong>Sprint 2 PR:</strong> DesignAgent + RenderAgent + 8 skills + 8 tools + visual eval dataset (10 rows). <strong>Sprint 3 PR:</strong> IterationAgent + Orchestrator + 2 skills + KBs + A/B comparison results. Each PR includes before/after eval scores. Required reviewers: 1 peer SA (skill accuracy) + 1 engineer (code quality).</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Gate 3 Outputs:</strong></p>
+<ul>
+<li>[x] All 15 skills converted, versioned, and passing eval</li>
+<li>[x] All 8 tools implemented and tested</li>
+<li>[x] Content eval: &gt;= 85% weighted score, zero data accuracy FAILs</li>
+<li>[x] Visual eval: layout quality &gt;= 4/5, zero overflow/truncation on standard templates</li>
+<li>[x] A/B comparison: agentic &gt;= current pipeline on quality, latency, cost, and failure rate</li>
+<li>[x] Hold-out set passes (5 rows never seen during development/auto-refinement)</li>
+<li>[x] All code reviewed by engineering</li>
+<li>[x] Known limitations documented (e.g., Mermaid rendering edge cases, very large PDFs, custom asset types)</li>
+</ul>
+<hr />
+<h2 id="stage-4-deploy-amp-validate">STAGE 4: DEPLOY &amp; VALIDATE</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Action Item</th>
+<th>SCA/MedComm Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Deploy to staging</td>
+<td>Deploy agentic pipeline to staging alongside current Celery pipeline. Feature flag <code>USE_AGENTIC_PIPELINE</code> controls routing — both must be runnable simultaneously. Staging uses separate API keys from production (Gemini, Bedrock, Adobe).</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Run full eval in staging</td>
+<td>Execute complete eval suite (25-30 rows) in staging container. Verify scores match local dev within 0.05 tolerance. <strong>Check specifically:</strong> Playwright screenshot rendering works in staging (headless Chromium dependencies installed), S3 paths resolve correctly (<code>chats/{chat_id}/</code> structure), Adobe PDF credentials rotate properly (APIKeyManager with multiple client_id/secret pairs), LLM rate limits don't cause cascading timeouts (4 RPS, 15 concurrent, 300s queue wait), fallback chain fires correctly (Gemini 3 Pro → 2.5 Pro with 30s/60s delays).</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Compare staging vs. local</td>
+<td>If eval scores differ by &gt; 0.05 on weighted average → investigate environment parity before proceeding. Common causes: different Playwright/Chromium version in container, model access differences (rate limits, quotas), S3 latency in staging VPC.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Pin model versions</td>
+<td>Lock in <code>config/models.yaml</code>: <code>gemini-3-pro-preview</code> (PDF extraction, section layout for standard templates), <code>gemini-2.5-pro</code> (outline, content fleshing, section fit), <code>claude-sonnet-3.7</code> via Bedrock (design specs, code iteration). Template overrides: az-infographic/slide-deck use <code>gemini-3-pro</code> for all Stage 10 sub-stages. Document fallback chain. Never use &quot;latest&quot; — always exact version strings.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Set up monitoring</td>
+<td>Structured logging for every agent and tool call: <code>{agent: &quot;ContentAgent&quot;, skill: &quot;pdf-extraction&quot;, skill_version: &quot;1.0.0&quot;, model: &quot;gemini-3-pro&quot;, latency_ms: 45000, tokens_in: 12000, tokens_out: 3000, cost_usd: 0.45, status: &quot;completed&quot;, run_id: &quot;...&quot;, chat_id: &quot;...&quot;}</code>. Leverage existing MONITOR_LLM_CALLS table (already stores full request/response, large payloads in S3 at <code>llm-payloads/</code>). <strong>Alerts:</strong> Pipeline failure rate &gt; 10%, single asset cost &gt; $10, end-to-end latency p95 &gt; 15 min, agent stall (no progress for 5 min).</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Test rollback</td>
+<td>Verify feature flag can instantly route all traffic back to current Celery pipeline. Execute rollback drill: flip flag → run 3 test assets through old pipeline → confirm outputs correct and DB state consistent. Document: rollback takes &lt; 2 minutes (flag flip + cache clear), no data migration needed (both systems share same PostgreSQL schema and S3 structure).</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Cost validation</td>
+<td>Run 20 identical assets through both pipelines. Compare total LLM API cost per asset broken down by agent/stage. Validate within $5/asset ceiling. Calculate model tiering savings: Gemini 2.5 for text tasks vs Gemini 3 for visual tasks vs Claude for reasoning. Track infrastructure costs: Playwright container compute, S3 storage, Adobe API calls.</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Incident response runbook</td>
+<td><strong>SEV-1:</strong> Asset generates hallucinated clinical data → immediate rollback to Celery pipeline + investigate skill + add regression test row. <strong>SEV-2:</strong> Layout consistently overflows for a template type → disable that template, fix section-fit skill, add visual eval row. <strong>SEV-3:</strong> Cost spike (Orchestrator spawning unnecessary agent calls or retry loops) → check agent delegation logic, verify rate limiter, add cost guardrail per asset. <strong>SEV-4:</strong> Minor visual inconsistency (font rendering, spacing) → update <code>design-principles</code> KB, add to corrections KB.</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Security check</td>
+<td>Verify: no API keys in skill files or KB files. S3 presigned URLs still use 15-min expiry. LLM request/response payloads stored in S3 (not logged to console or stdout). Adobe credential rotation still works through APIKeyManager. JWT auth flow unchanged. <code>.env</code> files gitignored. Secrets scanning active in CI (detect-secrets). Separate API keys for staging vs production.</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Production deployment plan</td>
+<td><strong>Canary rollout via feature flag:</strong> Week 1: 10% of new projects routed to agentic pipeline. Monitor quality, latency, cost, failure rate daily. Week 2: If all metrics within targets → ramp to 50%. Week 3: If stable → 100%. Engineer + Leadership approval required at each ramp step. Old Celery pipeline kept available for 4 weeks post-100% as safety net.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Gate 4 Outputs:</strong></p>
+<ul>
+<li>[x] Full eval passes in staging (within 0.05 of local scores)</li>
+<li>[x] Monitoring live with per-agent metrics, cost dashboard, failure alerts</li>
+<li>[x] Rollback tested and documented (feature flag switch &lt; 2 min)</li>
+<li>[x] Cost per asset validated within $5 ceiling with breakdown</li>
+<li>[x] Incident response runbook with SCA-specific scenarios</li>
+<li>[x] Model versions pinned in config</li>
+<li>[x] Security verified (no secrets in code, separate keys, scanning active)</li>
+<li>[x] Engineering + Leadership sign-off on canary deployment plan</li>
+</ul>
+<hr />
+<h2 id="stage-5-operate-amp-evolve">STAGE 5: OPERATE &amp; EVOLVE</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Action Item</th>
+<th>SCA/MedComm Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Assemble handoff package</td>
+<td><strong>Architecture doc:</strong> Multi-agent topology diagram (Orchestrator → ContentAgent → DesignAgent → RenderAgent → IterationAgent), data flow (S3 → agents → tools → PDF), tool dependency map (which tools each agent uses). <strong>Skill files:</strong> All 15 skills in <code>/skills/sca/</code>, each versioned with model and prompt metadata. <strong>KBs:</strong> 6 knowledge bases covering asset types, templates, XML schema, writing conventions, design principles, common failures. <strong>Eval suite:</strong> 25-30 rows (content + visual) + hold-out set + LLM-as-Judge prompts + automated checks. <strong>Known limitations:</strong> Mermaid rendering edge cases, very large PDFs (100+ pages), custom asset type handling, Adobe credential timeout under high concurrency. <strong>Decision log:</strong> Why multi-agent over single-agent, why specific model assignments per skill, framework decision rationale.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Train delivery team</td>
+<td><strong>Session 1 — System overview:</strong> How the 4 agents work, what each skill does, how tools interact, where data flows through S3/PostgreSQL. Walk through a complete asset generation trace. <strong>Session 2 — Daily operations:</strong> How to monitor agent performance via structured logs, read the cost dashboard, interpret eval scores. How to add a new template (update <code>kb/sca/template-catalog.md</code> + add template override if needed). How to adjust a skill (edit <code>.md</code> file, run eval, submit PR). <strong>Session 3 — Troubleshooting:</strong> Layout overflow → check <code>section-fit.md</code> skill + asset dimensions in <code>template-resolver</code>. Content hallucination → check <code>section-fleshing.md</code> + source extraction quality from Stage 1. Agent timeout → check LLM queue rate limits and fallback chain. Cost spike → check Orchestrator delegation logic. All sessions recorded.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Validate independence</td>
+<td>Delivery team runs <code>python run_eval.py --mode full</code> independently. They can interpret the output: which skills are underperforming, which dimensions need attention. They can make a skill edit, run quick eval, and submit a PR without builder involvement. If they can't → training is incomplete.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Define escalation tiers</td>
+<td><strong>L1 (Delivery handles):</strong> Known issues with documented fixes — pipeline stall (restart per runbook), template rendering glitch (known Playwright workaround), Adobe credential timeout (trigger rotation). <strong>L2 (Delivery + SA consult):</strong> Known issue type but novel specifics — new document format causing PDF extraction failures, unfamiliar asset type edge case. <strong>L3 (Build team):</strong> Requires skill/KB/code change — systematic quality regression on a dimension, new tool needed, framework limitation discovered. <strong>L4 (Leadership):</strong> Architectural decision — e.g., Strands framework fundamentally doesn't scale, need to re-evaluate approach.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Activate feedback loop</td>
+<td>QC classifies every piece of feedback on MedComm assets: <strong>(A) Factual error</strong> (wrong data, hallucinated claim) → add regression test row with data_accuracy = FAIL → route to build team for skill fix. <strong>(B) Missing content</strong> (section incomplete, citations missing) → add eval row with completeness &lt; 1.0 → SA reviews skill. <strong>(C) Style mismatch</strong> (client wants different tone, layout preference) → update <code>design-principles</code> or <code>medical-writing-conventions</code> KB → add client-specific corrections. <strong>(D) New capability request</strong> (new asset type, new edit mode) → not added to eval dataset, goes through Stage 0 intake as separate engagement. Track rework rate — target &lt; 20%.</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Transfer monitoring ownership</td>
+<td><strong>Daily:</strong> Automated quality spot checks + cost dashboard review (delivery team). <strong>Weekly:</strong> QC human review of 10 assets (blind scoring). <strong>Bi-weekly:</strong> Full eval suite re-run (automated). <strong>Monthly:</strong> Quality trend report to stakeholders — average scores, failure patterns, cost trends, recommendations.</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Support warranty</td>
+<td>Builders remain available for L3 escalations for 4 weeks post-handoff. During this period, track: how many L3 escalations per week? Are they trending to zero? If not, revisit training materials or identify systemic issues.</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Scale to new asset types</td>
+<td>Once pilot succeeds, test scalability: add a new asset type (e.g., microsite) following <strong>Type B process</strong> (Stages 0 → 2 → 3 → 4 → 5, skip Stage 1 since requirements framework exists). Should require: new skill variants (<code>microsite-layout.md</code>), template addition to catalog KB, 10-row eval dataset for new type. <strong>If this takes hours not days, the architecture is working.</strong></td>
+</tr>
+<tr>
+<td>9</td>
+<td>WoW process retrospective</td>
+<td>After pilot completes, run a dedicated retro on the WoW process itself: What stages added real value? What felt like overhead? Where did we skip steps and regret it? Where did the process save us from a mistake? Which gate caught a real issue? Feed learnings back into the process map for the next team that uses it. <strong>This retro is the real deliverable of the pilot</strong> — not just the agentic platform, but validated ways of working.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Gate 5 Outputs:</strong></p>
+<ul>
+<li>[x] Handoff package complete (architecture, 15 skills, 6 KBs, eval suite, runbook, decision log)</li>
+<li>[x] Delivery team trained (3 sessions recorded)</li>
+<li>[x] Delivery team can run eval suite and interpret results independently</li>
+<li>[x] Escalation tiers defined and agreed (L1-L4)</li>
+<li>[x] Feedback loop active with QC classification</li>
+<li>[x] Monitoring ownership transferred</li>
+<li>[x] Support warranty: 4 weeks, tracking L3 escalation trend</li>
+<li>[x] Scalability tested: new asset type added via Type B process</li>
+<li>[x] WoW process retro completed with documented learnings</li>
+</ul>
+<hr />
+<h2 id="cross-cutting-applies-throughout-this-pilot">CROSS-CUTTING: APPLIES THROUGHOUT THIS PILOT</h2>
+<h3 id="scope-boundaries">Scope Boundaries</h3>
+<p>Explicitly <strong>out of scope</strong> for this pilot — any request touching these goes through Stage 0 as a separate engagement:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Out of Scope</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frontend redesign</td>
+<td>React app stays as-is; agentic changes are backend-only</td>
+</tr>
+<tr>
+<td>Authentication changes</td>
+<td>JWT + SSO flow unchanged</td>
+</tr>
+<tr>
+<td>New asset types</td>
+<td>Microsites, etc. deferred to post-pilot scalability test</td>
+</tr>
+<tr>
+<td>Database schema changes</td>
+<td>Agentic system uses same PostgreSQL tables (STAGES, REVISIONS, SECTIONS)</td>
+</tr>
+<tr>
+<td>Client-facing deployment</td>
+<td>Internal pilot first; client rollout is a separate decision</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="cost-governance">Cost Governance</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Expected Daily Spend</th>
+<th>Governance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Development (Sprints 1-3)</td>
+<td>$10-30/day (eval runs + dev testing)</td>
+<td>SA reviews weekly</td>
+</tr>
+<tr>
+<td>Staging validation</td>
+<td>$20-50/day (full eval suite + A/B comparison)</td>
+<td>Leadership notified</td>
+</tr>
+<tr>
+<td>Production canary (10%)</td>
+<td>$5-15/day</td>
+<td>Auto-approved</td>
+</tr>
+<tr>
+<td>Production full (100%)</td>
+<td>$30-80/day</td>
+<td>Monthly cost report to leadership</td>
+</tr>
+<tr>
+<td>Any single asset &gt; $10</td>
+<td>—</td>
+<td>Engineer reviews after the fact</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="timeline">Timeline</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Milestone</th>
+<th>Gate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Week 1</td>
+<td>Stage 0 complete — classified, STO assigned, prioritized</td>
+<td>Gate 0</td>
+</tr>
+<tr>
+<td>Week 2-3</td>
+<td>Stage 1 complete — pipeline documented, eval plan, scalability params, requirements</td>
+<td>Gate 1</td>
+</tr>
+<tr>
+<td>Week 3</td>
+<td>Stage 2 complete — architecture decided, skills + tools mapped, framework chosen</td>
+<td>Gate 2</td>
+</tr>
+<tr>
+<td>Week 4-5</td>
+<td>Sprint 1 — ContentAgent + 4 skills + content eval passing</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Week 6-7</td>
+<td>Sprint 2 — DesignAgent + RenderAgent + 8 skills + 8 tools + visual eval passing</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Week 8-9</td>
+<td>Sprint 3 — IterationAgent + Orchestrator + A/B comparison passing</td>
+<td>Gate 3</td>
+</tr>
+<tr>
+<td>Week 10</td>
+<td>Stage 4 — Staging deployment + full eval + rollback test + monitoring</td>
+<td>Gate 4</td>
+</tr>
+<tr>
+<td>Week 11-12</td>
+<td>Stage 4-5 — Production canary → ramp → handoff + retro</td>
+<td>Gate 5</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="success-criteria-summary">Success Criteria Summary</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Target</th>
+<th>How Measured</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content quality</td>
+<td>&gt;= 85% weighted eval score</td>
+<td>LLM-as-Judge + Tier 3 human review</td>
+</tr>
+<tr>
+<td>Data accuracy</td>
+<td>Zero FAILs</td>
+<td>Automated + LLM-as-Judge (binary)</td>
+</tr>
+<tr>
+<td>Visual quality</td>
+<td>&gt;= 4/5 average</td>
+<td>Multi-modal LLM-as-Judge + human review</td>
+</tr>
+<tr>
+<td>Pipeline failure rate</td>
+<td>&lt; 5%</td>
+<td>Production monitoring</td>
+</tr>
+<tr>
+<td>End-to-end latency</td>
+<td>&lt; 8 min per asset</td>
+<td>Structured logging p50/p95</td>
+</tr>
+<tr>
+<td>Cost per asset</td>
+<td>&lt; $5</td>
+<td>Per-agent cost tracking</td>
+</tr>
+<tr>
+<td>Rework rate</td>
+<td>&lt; 20%</td>
+<td>QC feedback classification</td>
+</tr>
+<tr>
+<td>Time to add new asset type</td>
+<td>Hours, not days</td>
+<td>Post-pilot scalability test</td>
+</tr>
+<tr>
+<td>Process followed</td>
+<td>All gates passed</td>
+<td>Gate checklists completed</td>
+</tr>
+</tbody>
+</table></div>
 </div></div></div>
 <div class="dv" id="dv-master-framework"><div class="dt"><button class="dt-b" onclick="goHome()">&#8592; All Documents</button><span class="dt-c">Core Framework &rsaquo; <b>Master Framework</b></span></div><div class="db"><div class="dh"><div class="dh-badge" style="background:#4f46e518;color:#4f46e5">Core Framework</div><h1>Master Framework</h1><div class="dh-sub">Architecture, Stages, Gates &amp; RACI</div><div class="dh-m"><span>April 2026</span></div></div><div class="prose"><h1>Ways of Working: Master Framework</h1>
 <p><em>April 2026</em></p>
@@ -11466,6 +13052,7 @@ function toggleSB(){var s=document.getElementById('sb'),b=document.getElementByI
 (function(){if(localStorage.getItem('sc')==='1'){document.getElementById('sb').classList.add('c');var b=document.getElementById('sbt');b.classList.add('sh');b.innerHTML='&#9776;'}})();
 function toggleT(){var t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.getElementById('tb').innerHTML=t==='light'?'&#9789; Dark':'&#9788; Light';localStorage.setItem('wt',t)}
 (function(){var s=localStorage.getItem('wt');if(s){document.documentElement.setAttribute('data-theme',s);document.getElementById('tb').innerHTML=s==='light'?'&#9789; Dark':'&#9788; Light'}})();
+function switchLvl(n){var l1=document.getElementById('lv-l1'),l2=document.getElementById('lv-l2'),ex=document.getElementById('lv-ex'),b1=document.getElementById('lb-l1'),b2=document.getElementById('lb-l2'),bx=document.getElementById('lb-ex'),h=document.getElementById('lvl-hint'),t1=document.getElementById('st-pm-l1'),t2=document.getElementById('st-pm-l2'),tx=document.getElementById('st-pm-ex');if(!l1)return;l1.style.display='none';l2.style.display='none';if(ex)ex.style.display='none';b1.classList.remove('lvl-on');b2.classList.remove('lvl-on');if(bx)bx.classList.remove('lvl-on');if(t1)t1.style.display='none';if(t2)t2.style.display='none';if(tx)tx.style.display='none';if(n===1){l1.style.display='block';b1.classList.add('lvl-on');h.textContent='Scannable one-liner per step. Click Full Detail for the complete playbook.';if(t1)t1.style.display='block'}else if(n===2){l2.style.display='block';b2.classList.add('lvl-on');h.textContent='Complete operational playbook with all procedures and templates.';if(t2)t2.style.display='block'}else if(n===3){if(ex)ex.style.display='block';if(bx)bx.classList.add('lvl-on');h.textContent='SCA Module 2 (MedComm) agentic transformation \u2014 stage-by-stage pilot walkthrough.';if(tx)tx.style.display='block'}document.getElementById('cnt').scrollTop=0}
 </script>
 </body>
 </html>

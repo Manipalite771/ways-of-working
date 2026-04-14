@@ -6,6 +6,8 @@ from markdown_it import MarkdownIt
 
 V2_DIR = "/home/tanmay/Ways of Working/v2"
 OUT = "/home/tanmay/Ways of Working/wow-portal.html"
+LEVEL1_FILE = "/home/tanmay/Ways of Working/WoW_Process_Map_Level1.md"
+EXAMPLE_FILE = "/home/tanmay/Ways of Working/WoW_Example_Implementation.md"
 
 DOCUMENTS = [
     {"id":"executive-summary","file":"WoW_Summary.md","title":"Executive Summary","subtitle":"Quick overview of intent, structure &amp; key concepts","color":"#0f766e","category":"overview"},
@@ -74,6 +76,36 @@ for doc in DOCUMENTS:
             toc.append({"t": text[:46], "s": slugify(text), "d": 3})
     doc_toc[doc["id"]] = toc
 
+# ── Render Level 1 process map ──
+level1_html = ""
+level1_toc = []
+if os.path.exists(LEVEL1_FILE):
+    with open(LEVEL1_FILE) as f:
+        level1_raw = f.read()
+    level1_html = render_md(level1_raw)
+    for line in level1_raw.split("\n"):
+        if line.startswith("## "):
+            text = line[3:].strip()
+            level1_toc.append({"t": text[:48], "s": slugify(text), "d": 2})
+        elif line.startswith("### "):
+            text = line[4:].strip()
+            level1_toc.append({"t": text[:46], "s": slugify(text), "d": 3})
+
+# ── Render Example Implementation ──
+example_html = ""
+example_toc = []
+if os.path.exists(EXAMPLE_FILE):
+    with open(EXAMPLE_FILE) as f:
+        example_raw = f.read()
+    example_html = render_md(example_raw)
+    for line in example_raw.split("\n"):
+        if line.startswith("## "):
+            text = line[3:].strip()
+            example_toc.append({"t": text[:48], "s": slugify(text), "d": 2})
+        elif line.startswith("### "):
+            text = line[4:].strip()
+            example_toc.append({"t": text[:46], "s": slugify(text), "d": 3})
+
 # ── Search index ──
 search_idx = []
 for doc in DOCUMENTS:
@@ -121,33 +153,92 @@ for doc in DOCUMENTS:
         '<div class="si-s">%s</div></div></div>'
         % (doc["id"], doc["id"], doc["color"], doc["title"], doc["subtitle"])
     )
-    nav_parts.append('<div class="st" id="st-%s">' % doc["id"])
-    for entry in doc_toc[doc["id"]]:
-        cls = "d3" if entry["d"] == 3 else ""
-        t = html_mod.escape(entry["t"])
-        nav_parts.append('<a class="%s" data-s="%s" onclick="scrollH(\'%s\')">%s</a>' % (cls, entry["s"], entry["s"], t))
-    nav_parts.append('</div>')
+    if doc["id"] == "process-map" and level1_toc:
+        # Level 1 TOC (shown by default)
+        nav_parts.append('<div class="st" id="st-%s">' % doc["id"])
+        nav_parts.append('<div id="st-pm-l1">')
+        for entry in level1_toc:
+            cls = "d3" if entry["d"] == 3 else ""
+            t = html_mod.escape(entry["t"])
+            nav_parts.append('<a class="%s" data-s="%s" onclick="scrollH(\'%s\')">%s</a>' % (cls, entry["s"], entry["s"], t))
+        nav_parts.append('</div>')
+        # Level 2 TOC (hidden by default)
+        nav_parts.append('<div id="st-pm-l2" style="display:none">')
+        for entry in doc_toc[doc["id"]]:
+            cls = "d3" if entry["d"] == 3 else ""
+            t = html_mod.escape(entry["t"])
+            nav_parts.append('<a class="%s" data-s="%s" onclick="scrollH(\'%s\')">%s</a>' % (cls, entry["s"], entry["s"], t))
+        nav_parts.append('</div>')
+        # Example Implementation TOC (hidden by default)
+        if example_toc:
+            nav_parts.append('<div id="st-pm-ex" style="display:none">')
+            for entry in example_toc:
+                cls = "d3" if entry["d"] == 3 else ""
+                t = html_mod.escape(entry["t"])
+                nav_parts.append('<a class="%s" data-s="%s" onclick="scrollH(\'%s\')">%s</a>' % (cls, entry["s"], entry["s"], t))
+            nav_parts.append('</div>')
+        nav_parts.append('</div>')
+    else:
+        nav_parts.append('<div class="st" id="st-%s">' % doc["id"])
+        for entry in doc_toc[doc["id"]]:
+            cls = "d3" if entry["d"] == 3 else ""
+            t = html_mod.escape(entry["t"])
+            nav_parts.append('<a class="%s" data-s="%s" onclick="scrollH(\'%s\')">%s</a>' % (cls, entry["s"], entry["s"], t))
+        nav_parts.append('</div>')
 nav_html = "\n".join(nav_parts)
 
 # Doc views
 dv_parts = []
 for doc in DOCUMENTS:
     cat = CAT_LABELS[doc["category"]]
-    dv_parts.append(
-        '<div class="dv" id="dv-%s">'
-        '<div class="dt">'
-        '<button class="dt-b" onclick="goHome()">&#8592; All Documents</button>'
-        '<span class="dt-c">%s &rsaquo; <b>%s</b></span>'
-        '</div>'
-        '<div class="db"><div class="dh">'
-        '<div class="dh-badge" style="background:%s18;color:%s">%s</div>'
-        '<h1>%s</h1>'
-        '<div class="dh-sub">%s</div>'
-        '<div class="dh-m"><span>April 2026</span></div>'
-        '</div><div class="prose">%s</div></div></div>'
-        % (doc["id"], cat, doc["title"], doc["color"], doc["color"], cat,
-           doc["title"], doc["subtitle"], doc_html[doc["id"]])
-    )
+    if doc["id"] == "process-map" and level1_html:
+        # Process Map gets Level 1 / Level 2 / Example toggle
+        ex_btn = ""
+        ex_div = ""
+        if example_html:
+            ex_btn = '<button class="lvl-btn" id="lb-ex" onclick="switchLvl(3)">Example Implementation</button>'
+            ex_div = '<div class="prose lvl-view" id="lv-ex" style="display:none">%s</div>' % example_html
+        dv_parts.append(
+            '<div class="dv" id="dv-%s">'
+            '<div class="dt">'
+            '<button class="dt-b" onclick="goHome()">&#8592; All Documents</button>'
+            '<span class="dt-c">%s &rsaquo; <b>%s</b></span>'
+            '</div>'
+            '<div class="db"><div class="dh">'
+            '<div class="dh-badge" style="background:%s18;color:%s">%s</div>'
+            '<h1>%s</h1>'
+            '<div class="dh-sub">%s</div>'
+            '<div class="dh-m"><span>April 2026</span></div>'
+            '</div>'
+            '<div class="lvl-bar">'
+            '<button class="lvl-btn lvl-on" id="lb-l1" onclick="switchLvl(1)">Quick Reference</button>'
+            '<button class="lvl-btn" id="lb-l2" onclick="switchLvl(2)">Full Detail</button>'
+            '%s'
+            '<span class="lvl-hint" id="lvl-hint">Scannable one-liner per step. Click Full Detail for the complete playbook.</span>'
+            '</div>'
+            '<div class="prose lvl-view" id="lv-l1">%s</div>'
+            '<div class="prose lvl-view" id="lv-l2" style="display:none">%s</div>'
+            '%s'
+            '</div></div>'
+            % (doc["id"], cat, doc["title"], doc["color"], doc["color"], cat,
+               doc["title"], doc["subtitle"], ex_btn, level1_html, doc_html[doc["id"]], ex_div)
+        )
+    else:
+        dv_parts.append(
+            '<div class="dv" id="dv-%s">'
+            '<div class="dt">'
+            '<button class="dt-b" onclick="goHome()">&#8592; All Documents</button>'
+            '<span class="dt-c">%s &rsaquo; <b>%s</b></span>'
+            '</div>'
+            '<div class="db"><div class="dh">'
+            '<div class="dh-badge" style="background:%s18;color:%s">%s</div>'
+            '<h1>%s</h1>'
+            '<div class="dh-sub">%s</div>'
+            '<div class="dh-m"><span>April 2026</span></div>'
+            '</div><div class="prose">%s</div></div></div>'
+            % (doc["id"], cat, doc["title"], doc["color"], doc["color"], cat,
+               doc["title"], doc["subtitle"], doc_html[doc["id"]])
+        )
 dv_html = "\n".join(dv_parts)
 
 # ── Write final HTML using a plain template with markers ──
@@ -273,6 +364,13 @@ button{cursor:pointer;font-family:inherit}
 .prose tbody tr:last-child td{border-bottom:none}
 .prose tbody tr:nth-child(even) td{background:var(--bgs)}
 .prose tbody tr:hover td{background:var(--bgh)}
+/* Level toggle */
+.lvl-bar{display:flex;align-items:center;gap:6px;margin-bottom:24px;padding:4px;background:var(--bg2);border-radius:var(--rl);width:fit-content}
+.lvl-btn{padding:7px 16px;border:none;border-radius:var(--r);font-size:12px;font-weight:500;font-family:var(--fb);color:var(--t3);background:transparent;transition:.2s}
+.lvl-btn:hover{color:var(--t1)}
+.lvl-btn.lvl-on{background:var(--bg1);color:var(--ac);box-shadow:var(--sh);font-weight:600}
+.lvl-hint{font-size:10.5px;color:var(--t4);margin-left:8px;font-style:italic}
+.lvl-view .prose{margin-top:0}
 /* Search overlay */
 .sov{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:100;display:none;align-items:flex-start;justify-content:center;padding-top:10vh;backdrop-filter:blur(3px)}
 .sov.on{display:flex}
@@ -338,6 +436,7 @@ function toggleSB(){var s=document.getElementById('sb'),b=document.getElementByI
 (function(){if(localStorage.getItem('sc')==='1'){document.getElementById('sb').classList.add('c');var b=document.getElementById('sbt');b.classList.add('sh');b.innerHTML='&#9776;'}})();
 function toggleT(){var t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.getElementById('tb').innerHTML=t==='light'?'&#9789; Dark':'&#9788; Light';localStorage.setItem('wt',t)}
 (function(){var s=localStorage.getItem('wt');if(s){document.documentElement.setAttribute('data-theme',s);document.getElementById('tb').innerHTML=s==='light'?'&#9789; Dark':'&#9788; Light'}})();
+function switchLvl(n){var l1=document.getElementById('lv-l1'),l2=document.getElementById('lv-l2'),ex=document.getElementById('lv-ex'),b1=document.getElementById('lb-l1'),b2=document.getElementById('lb-l2'),bx=document.getElementById('lb-ex'),h=document.getElementById('lvl-hint'),t1=document.getElementById('st-pm-l1'),t2=document.getElementById('st-pm-l2'),tx=document.getElementById('st-pm-ex');if(!l1)return;l1.style.display='none';l2.style.display='none';if(ex)ex.style.display='none';b1.classList.remove('lvl-on');b2.classList.remove('lvl-on');if(bx)bx.classList.remove('lvl-on');if(t1)t1.style.display='none';if(t2)t2.style.display='none';if(tx)tx.style.display='none';if(n===1){l1.style.display='block';b1.classList.add('lvl-on');h.textContent='Scannable one-liner per step. Click Full Detail for the complete playbook.';if(t1)t1.style.display='block'}else if(n===2){l2.style.display='block';b2.classList.add('lvl-on');h.textContent='Complete operational playbook with all procedures and templates.';if(t2)t2.style.display='block'}else if(n===3){if(ex)ex.style.display='block';if(bx)bx.classList.add('lvl-on');h.textContent='SCA Module 2 (MedComm) agentic transformation \u2014 stage-by-stage pilot walkthrough.';if(tx)tx.style.display='block'}document.getElementById('cnt').scrollTop=0}
 </script>
 </body>
 </html>'''
